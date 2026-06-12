@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Share File</title>
+</head>
+
+<body>
+
+    <h2>
+        Share {{ file.display_name }}
+    </h2>
+
+    <form method="POST">
+
+        <select
+            name="username"
+            required
+        >
+
+            {% for user in users %}
+
+            <option
+                value="{{ user.username }}"
+            >
+                {{ user.username }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">
+            Share
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/dashboard">
+        Back
+    </a>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+backend/venv/
+**/__pycache__/
+*.pyc
+
+*.tfstate
+*.tfstate.backup
+
+.terraform/
+.terraform.lock.hcl
+
+*.pem
+
+.env
+
+terraform/session-manager-plugin.deb
