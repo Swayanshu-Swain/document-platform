@@ -42,9 +42,13 @@ This project demonstrates the complete lifecycle of a cloud-hosted application:
 * GitHub Actions CI/CD pipeline
 * Docker Hub image registry
 
-## Architecture
+## Infrastructure Architecture
 
-![Architecture](docs/architecture-diagram.png)
+![Infrastructure Architecture](docs/infrastructure-diagram.png)
+
+## Application Architecture
+
+![Application Architecture](docs/application-diagram.png)
 
 ## CI/CD Workflow
 
