@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +29,35 @@ jobs:
         run: |
           docker push \
             swayanshuswain/document-platform-backend:latest
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Find EC2 Instance
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters \
+            "Name=tag:Name,Values=document-platform-dev" \
+            "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].InstanceId" \
+            --output text)
+
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+
+      - name: Deploy via SSM
+        run: |
+          aws ssm send-command \
+            --instance-ids ${{ env.INSTANCE_ID }} \
+            --document-name AWS-RunShellScript \
+            --parameters '{
+              "commands":[
+                "sudo docker pull swayanshuswain/document-platform-backend:latest",
+                "sudo docker stop document-platform || true",
+                "sudo docker rm document-platform || true",
+                "sudo docker run -d --name document-platform -p 80:5000 -e AWS_REGION=ap-south-1 -e DYNAMODB_USERS_TABLE=users-dev -e AWS_S3_BUCKET=document-platform-dev-006870473063 -e FLASK_SECRET_KEY=test123 swayanshuswain/document-platform-backend:latest"
+              ]
+            }'
