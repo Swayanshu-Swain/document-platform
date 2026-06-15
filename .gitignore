@@ -12,4 +12,7 @@ backend/venv/
 
 .env
 
+awscliv2.zip
+*.zip
+
 terraform/session-manager-plugin.deb
