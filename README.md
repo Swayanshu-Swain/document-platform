@@ -44,15 +44,15 @@ This project demonstrates the complete lifecycle of a cloud-hosted application:
 
 ## Infrastructure Architecture
 
-![Infrastructure Architecture](docs/infrastructure-diagram.png)
+![Infrastructure Architecture](docs/screenshots/infrastructure-diagram.png)
 
 ## Application Architecture
 
-![Application Architecture](docs/application-diagram.png)
+![Application Architecture](docs/screenshots/application-diagram.png)
 
 ## CI/CD Workflow
 
-![Deployment Flow](docs/deployment-flow.png)
+![Deployment Flow](docs/screenshots/deployment-flow.png)
 
 1. Developer pushes code to GitHub
 2. GitHub Actions builds Docker image
