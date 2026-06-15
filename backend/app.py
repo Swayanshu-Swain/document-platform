@@ -30,7 +30,7 @@ app.register_blueprint(
 )
 @app.route("/")
 def home():
-    return "Document Platform Running v2"
+    return "Document Platform Running v3"
 
 
 if __name__ == "__main__":
