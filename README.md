@@ -2,76 +2,127 @@
 
 A cloud-native document management platform built using AWS, Docker, Terraform, and GitHub Actions.
 
+## Overview
+
+This project demonstrates the complete lifecycle of a cloud-hosted application:
+
+* Infrastructure provisioning with Terraform
+* Containerized deployment using Docker
+* CI/CD automation using GitHub Actions
+* Storage using Amazon S3
+* Metadata and authentication using DynamoDB
+* Remote administration using AWS Systems Manager (SSM)
+
 ## Features
 
-* User authentication using DynamoDB
-* Document upload and storage in Amazon S3
+### Authentication & Authorization
+
+* Login system
 * Role-based access control
-* Audit logging
-* Infrastructure as Code using Terraform
-* Containerized backend using Docker
-* Automated CI/CD pipeline using GitHub Actions
-* Zero-SSH deployments using AWS Systems Manager
 
-## Architecture
+### Document Management
 
-User → EC2 → Docker Container → Flask Application
+* Upload files
+* Download files
+* Share files
+* File preview support
 
-Flask Application interacts with:
+### Cloud Infrastructure
 
-* DynamoDB (Users, Files, Audit Logs)
-* S3 (Document Storage)
-
-GitHub Actions:
-
-* Builds Docker image
-* Pushes image to Docker Hub
-* Triggers deployment through AWS SSM
-
-## Technology Stack
-
-### Backend
-
-* Python
-* Flask
-* Gunicorn
-
-### Cloud
-
-* AWS EC2
-* AWS S3
-* AWS DynamoDB
+* Amazon EC2
+* Amazon S3
+* Amazon DynamoDB
 * AWS IAM
 * AWS Systems Manager
 
 ### DevOps
 
-* Docker
-* Terraform
-* GitHub Actions
-* Docker Hub
+* Dockerized application
+* Terraform Infrastructure as Code
+* GitHub Actions CI/CD pipeline
+* Docker Hub image registry
 
-## Deployment Workflow
+## Architecture
+
+![Architecture](docs/architecture-diagram.png)
+
+## CI/CD Workflow
+
+![Deployment Flow](docs/deployment-flow.png)
 
 1. Developer pushes code to GitHub
 2. GitHub Actions builds Docker image
 3. Image pushed to Docker Hub
-4. GitHub Actions finds EC2 instance by tag
-5. AWS SSM sends deployment command
+4. GitHub Actions discovers EC2 instance by tag
+5. Deployment executed through AWS SSM
 6. EC2 pulls latest image
-7. Existing container replaced
-8. New version becomes available automatically
+7. Existing container replaced automatically
 
-## Public URL
+## Screenshots
 
-http://3.108.219.132
+### Login Page
 
-## Future Improvements
+![Login](docs/screenshots/login-page.png)
+
+### Application
+
+![Application](docs/screenshots/application-home.png)
+
+### GitHub Actions Deployment
+
+![CI/CD](docs/screenshots/github-actions.png)
+
+### Docker Container
+
+![Docker](docs/screenshots/docker-container.png)
+
+### DynamoDB
+
+![DynamoDB](docs/screenshots/dynamodb-tables.png)
+
+### S3
+
+![S3](docs/screenshots/s3-buckets.png)
+
+### EC2
+
+![EC2](docs/screenshots/ec2-instance.png)
+
+## Infrastructure Components
+
+| Service        | Purpose                     |
+| -------------- | --------------------------- |
+| EC2            | Hosts application           |
+| Docker         | Application runtime         |
+| DynamoDB       | User, file, and audit data  |
+| S3             | Document storage            |
+| SSM            | Remote deployment           |
+| GitHub Actions | CI/CD                       |
+| Docker Hub     | Container registry          |
+| Terraform      | Infrastructure provisioning |
+
+## Deployment
+
+Terraform provisions:
+
+* VPC
+* Security Groups
+* EC2 Instance
+* S3 Bucket
+* DynamoDB Tables
+* IAM Roles
+* SSM Access
+
+Application deployment is fully automated through GitHub Actions.
+
+## Future Enhancements
 
 * Custom Domain
-* HTTPS using Let's Encrypt
+* HTTPS with Let's Encrypt
 * Nginx Reverse Proxy
-* Application Load Balancer
 * CloudWatch Monitoring
+* Application Load Balancer
+* Auto Scaling
 * Kubernetes (EKS)
-* GitOps using ArgoCD
+* Helm
+* ArgoCD
