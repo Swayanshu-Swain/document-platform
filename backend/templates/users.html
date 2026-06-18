@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users</title>
+</head>
+<body>
+
+<h2>User Management</h2>
+
+<a href="/users/create">
+    Create User
+</a>
+
+|
+
+<a href="/dashboard">
+    Dashboard
+</a>
+
+|
+
+<a href="/logout">
+    Logout
+</a>
+
+<hr>
+
+<a href="/dashboard">
+    Dashboard
+</a>
+
+<hr>
+
+<table border="1">
+
+<tr>
+    <th>Username</th>
+    <th>Role</th>
+    <th>Status</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+
+<td>{{ user.username }}</td>
+
+<td>{{ user.role }}</td>
+
+<td>
+    {% if user.active %}
+        Active
+    {% else %}
+        Disabled
+    {% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

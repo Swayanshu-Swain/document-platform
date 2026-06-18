@@ -29,3 +29,7 @@ def get_all_users():
     response = users_table.scan()
 
     return response["Items"]
+def create_user(user_data):
+    users_table.put_item(
+        Item=user_data
+    )

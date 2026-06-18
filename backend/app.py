@@ -4,6 +4,10 @@ from config.settings import (
     FLASK_SECRET_KEY
 )
 
+from bootstrap.admin_initializer import (
+    initialize_admin
+)
+
 from routes.auth_routes import (
     auth_bp
 )
@@ -15,9 +19,24 @@ from routes.file_routes import (
     file_bp
 )
 
+from routes.admin_routes import (
+    admin_bp
+)
+
+app.register_blueprint(
+    admin_bp
+)
+
 app = Flask(__name__)
 
 app.secret_key = FLASK_SECRET_KEY
+
+try:
+    initialize_admin()
+except Exception as e:
+    print(
+        f"Admin initialization skipped: {e}"
+    )
 
 app.register_blueprint(auth_bp)
 
