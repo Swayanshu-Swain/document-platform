@@ -11,10 +11,13 @@ dynamodb = boto3.resource(
     region_name=AWS_REGION
 )
 
-audit_table = dynamodb.Table(
-    "audit_logs"
+from config.settings import (
+    DYNAMODB_AUDIT_TABLE
 )
 
+audit_table = dynamodb.Table(
+    DYNAMODB_AUDIT_TABLE
+)
 
 def log_event(
 
