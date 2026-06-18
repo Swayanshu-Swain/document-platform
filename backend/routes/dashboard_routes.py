@@ -60,9 +60,18 @@ def dashboard():
     <h2>
         Welcome {username}
         ({role})
-    </h2>
+    </h2>"""
 
-    <a href="/upload">
+    if role == "admin":
+
+	 html += """
+	    <p>
+	        <a href="/users">
+	            Manage Users
+	        </a>
+	    </p>"""
+
+    html+=f"""<a href="/upload">
         Upload File
     </a>
 
