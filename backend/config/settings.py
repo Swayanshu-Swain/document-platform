@@ -15,6 +15,14 @@ DYNAMODB_USERS_TABLE = os.getenv(
     "DYNAMODB_USERS_TABLE"
 )
 
+DYNAMODB_FILES_TABLE = os.getenv(
+    "DYNAMODB_FILES_TABLE"
+)
+
+DYNAMODB_AUDIT_TABLE = os.getenv(
+    "DYNAMODB_AUDIT_TABLE"
+)
+
 AWS_S3_BUCKET = os.getenv(
     "AWS_S3_BUCKET"
 )

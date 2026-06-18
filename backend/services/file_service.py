@@ -4,10 +4,13 @@ from services.dynamodb_service import dynamodb
 
 from boto3.dynamodb.conditions import Key
 
-files_table = dynamodb.Table(
-    "files"
+from config.settings import (
+    DYNAMODB_FILES_TABLE
 )
 
+files_table = dynamodb.Table(
+    DYNAMODB_FILES_TABLE
+)
 
 def create_file_metadata(
     file_id,
