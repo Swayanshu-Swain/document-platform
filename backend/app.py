@@ -23,10 +23,6 @@ from routes.admin_routes import (
     admin_bp
 )
 
-app.register_blueprint(
-    admin_bp
-)
-
 app = Flask(__name__)
 
 app.secret_key = FLASK_SECRET_KEY
@@ -47,6 +43,11 @@ app.register_blueprint(
 app.register_blueprint(
     file_bp
 )
+
+app.register_blueprint(
+    admin_bp
+)
+
 @app.route("/")
 def home():
     return "Document Platform Running v3"
