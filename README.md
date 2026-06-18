@@ -104,7 +104,7 @@ Infrastructure provisioning is fully automated through Terraform.
 
 This diagram represents the internal structure of the Flask application.
 
-![Application Architecture](docs/screenshots/application-architecture.png)
+![Application Architecture](docs/screenshots/application-infrastructure.png)
 
 ### Layered Design
 
