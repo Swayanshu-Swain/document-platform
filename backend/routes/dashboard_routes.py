@@ -51,10 +51,10 @@ def dashboard():
         ) 
     )
     deleted_files = (
-	    get_deleted_files(
-	        username
-	    )
-	)
+        get_deleted_files(
+            username
+        )
+    )
 
     html = f"""
     <h2>
@@ -64,12 +64,12 @@ def dashboard():
 
     if role == "admin":
 
-	 html += """
-	    <p>
-	        <a href="/users">
-	            Manage Users
-	        </a>
-	    </p>"""
+        html += """
+    <p>
+        <a href="/users">
+            Manage Users
+        </a>
+    </p>"""
 
     html+=f"""<a href="/upload">
         Upload File
@@ -82,68 +82,68 @@ def dashboard():
 
     for file in owned_files:
 
-	    html += f"""
-	    <p>
+        html += f"""
+        <p>
 
-	        <a href="/file/{file['file_id']}">
-	            {file['display_name']}
-	        </a>
+            <a href="/file/{file['file_id']}">
+                {file['display_name']}
+            </a>
 
-	        |
+            |
 
-	        <a href="/share/{file['file_id']}">
-	            Share
-	        </a>
-		|
+            <a href="/share/{file['file_id']}">
+                Share
+            </a>
+        |
 
-		<a href="/delete/{file['file_id']}">
-		    Delete
-		</a>
-	    </p>
-	    """
+        <a href="/delete/{file['file_id']}">
+            Delete
+        </a>
+        </p>
+        """
     html += """
-	<hr>
+    <hr>
 
-	<h3>
-	Shared With Me
-	</h3>
-	"""
+    <h3>
+    Shared With Me
+    </h3>
+    """
     for file in shared_files:
 
-	    html += f"""
-	    <p>
+        html += f"""
+        <p>
 
-	        <a href="/file/{file['file_id']}">
-	            {file['display_name']}
-	        </a>
-		|
+            <a href="/file/{file['file_id']}">
+                {file['display_name']}
+            </a>
+        |
 
-		<a href="/delete/{file['file_id']}">
-		    Remove
-		</a>
-	    </p>
-	    """
+        <a href="/delete/{file['file_id']}">
+            Remove
+        </a>
+        </p>
+        """
     html += """
-	<hr>
+    <hr>
 
-	<h3>
-	Deleted Files
-	</h3>
-	"""
+    <h3>
+    Deleted Files
+    </h3>
+    """
     for file in deleted_files:
 
-	    html += f"""
-	    <p>
+        html += f"""
+        <p>
 
-	        {file['display_name']}
+            {file['display_name']}
 
-	        |
+            |
 
-	        <a href="/restore/{file['file_id']}">
-	            Restore
-	        </a>
+            <a href="/restore/{file['file_id']}">
+                Restore
+            </a>
 
-	    </p>
-	    """
+        </p>
+        """
 
     return html
