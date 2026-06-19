@@ -72,3 +72,18 @@ def get_total_audit_events():
     return len(
         response["Items"]
     )
+def get_recent_audit_events():
+
+    response = audit_table.scan()
+
+    items = response.get(
+        "Items",
+        []
+    )
+
+    items.sort(
+        key=lambda x: x["timestamp"],
+        reverse=True
+    )
+
+    return items[:10]

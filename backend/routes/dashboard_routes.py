@@ -22,7 +22,8 @@ from services.file_service import (
 )
 
 from services.audit_service import (
-    get_total_audit_events
+    get_total_audit_events,
+    get_recent_audit_events
 )
 
 from flask import render_template
@@ -68,6 +69,10 @@ def dashboard():
         )
     )
 
+    audit_events = (
+        get_recent_audit_events()
+    )
+
     total_users = len(get_all_users())
 
     total_documents = (
@@ -84,15 +89,18 @@ def dashboard():
 
     return render_template(
     "dashboard.html",
-
     username=username,
     role=role,
+
+    owned_files=owned_files,
+    shared_files=shared_files,
+    deleted_files=deleted_files,
 
     total_users=total_users,
     total_documents=total_documents,
     total_shared=total_shared,
     total_audit_events=total_audit_events,
 
-    recent_documents=[],
-    audit_events=[]
+    recent_documents=owned_files,
+    audit_events=audit_events
 )

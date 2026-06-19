@@ -1,39 +1,344 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Upload File</title>
-</head>
+{% block title %}Upload Document{% endblock %}
+{% block page_header %}Upload Document{% endblock %}
 
-<body>
+{% block content %}
 
-    <h2>Upload File</h2>
+<div class="ac-page-header">
+    <div>
+        <div class="ac-page-title">
+            Upload Document
+        </div>
 
-    <form
-        method="POST"
-        enctype="multipart/form-data"
-    >
+        <p class="ac-page-subtitle mb-0">
+            Securely upload documents to your department workspace.
+        </p>
+    </div>
+</div>
 
-        <input
-            type="file"
-            name="file"
-            required
-        >
+<div class="row justify-content-center">
 
-        <br><br>
+    <div class="col-lg-8">
 
-        <button type="submit">
-            Upload
-        </button>
+        <div class="ac-card">
 
-    </form>
+            <div class="ac-card-header">
+                <div>
+                    <div class="ac-card-title">
+                        Document Upload
+                    </div>
 
-    <br>
+                    <p class="ac-text-muted mb-0">
+                        Files are securely stored in Amazon S3.
+                    </p>
+                </div>
+            </div>
 
-    <a href="/dashboard">
-        Back To Dashboard
-    </a>
+            <div class="ac-card-body">
 
-</body>
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
 
-</html>
+                    <div
+                        id="drop-zone"
+                        class="upload-dropzone"
+                    >
+
+                        <div class="upload-icon">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                        </div>
+
+                        <h4>
+                            Drag files here
+                        </h4>
+
+                        <p class="ac-text-muted">
+                            or click to browse
+                        </p>
+
+                        <p class="ac-text-faint">
+                            Supported: PDF, DOCX, XLSX, PNG, JPG
+                        </p>
+
+                        <input
+                            type="file"
+                            id="file-input"
+                            name="file"
+                            required
+                        >
+
+                        <div
+                            id="selected-file"
+                            class="selected-file"
+                        >
+                            No file selected
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="d-flex gap-3 mt-4 flex-wrap"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-gradient"
+                        >
+                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                            Upload Document
+                        </button>
+
+                        <a
+                            href="{{ url_for('dashboard.dashboard') }}"
+                            class="btn btn-outline-secondary"
+                        >
+                            <i class="bi bi-arrow-left"></i>
+                            Back to Dashboard
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row g-4 mt-2">
+
+    <div class="col-md-4">
+
+        <div class="ac-stat-card h-100">
+
+            <div class="ac-stat-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+
+            <h5 class="mt-3">
+                Security
+            </h5>
+
+            <p class="ac-text-muted mb-0">
+                Files are securely stored in Amazon S3 with controlled access.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="ac-stat-card h-100">
+
+            <div class="ac-stat-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+
+            <h5 class="mt-3">
+                Access Control
+            </h5>
+
+            <p class="ac-text-muted mb-0">
+                Department and user-based permissions protect sensitive data.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="ac-stat-card h-100">
+
+            <div class="ac-stat-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <h5 class="mt-3">
+                Audit Logging
+            </h5>
+
+            <p class="ac-text-muted mb-0">
+                Every upload, share, delete and restore action is recorded.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+.upload-dropzone {
+
+    border: 2px dashed rgba(124, 92, 255, 0.35);
+
+    border-radius: 24px;
+
+    padding: 60px 30px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+        135deg,
+        rgba(124,92,255,0.05),
+        rgba(0,194,255,0.04)
+    );
+
+    transition: all 0.25s ease;
+}
+
+.upload-dropzone.dragover {
+
+    border-color: #7c5cff;
+
+    background: linear-gradient(
+        135deg,
+        rgba(124,92,255,0.12),
+        rgba(0,194,255,0.08)
+    );
+
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 2rem;
+
+    color: #7c5cff;
+
+    background: rgba(124,92,255,0.1);
+}
+
+#file-input {
+
+    display: none;
+}
+
+.selected-file {
+
+    margin-top: 20px;
+
+    font-weight: 600;
+
+    color: #6b7280;
+}
+
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+const dropZone =
+    document.getElementById(
+        "drop-zone"
+    );
+
+const fileInput =
+    document.getElementById(
+        "file-input"
+    );
+
+const selectedFile =
+    document.getElementById(
+        "selected-file"
+    );
+
+dropZone.addEventListener(
+    "click",
+    () => fileInput.click()
+);
+
+fileInput.addEventListener(
+    "change",
+    function() {
+
+        if (
+            this.files.length > 0
+        ) {
+
+            selectedFile.textContent =
+                this.files[0].name;
+        }
+    }
+);
+
+dropZone.addEventListener(
+    "dragover",
+    function(e) {
+
+        e.preventDefault();
+
+        this.classList.add(
+            "dragover"
+        );
+    }
+);
+
+dropZone.addEventListener(
+    "dragleave",
+    function() {
+
+        this.classList.remove(
+            "dragover"
+        );
+    }
+);
+
+dropZone.addEventListener(
+    "drop",
+    function(e) {
+
+        e.preventDefault();
+
+        this.classList.remove(
+            "dragover"
+        );
+
+        fileInput.files =
+            e.dataTransfer.files;
+
+        if (
+            e.dataTransfer.files.length > 0
+        ) {
+
+            selectedFile.textContent =
+                e.dataTransfer.files[0].name;
+        }
+    }
+);
+
+</script>
+
+{% endblock %}
