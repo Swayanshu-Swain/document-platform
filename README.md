@@ -1,6 +1,6 @@
 # Document Platform
 
-A cloud-native document management platform built with AWS, Terraform, Docker, and GitHub Actions.
+A cloud-native enterprise document management platform built with AWS, Terraform, Docker, and GitHub Actions. The platform provides secure document storage, sharing, auditability, user administration, role-based access control, and automated cloud deployment through a complete DevOps pipeline
 
 This project demonstrates the complete software delivery lifecycle, from infrastructure provisioning and containerized deployment to automated CI/CD and cloud-native document storage.
 
@@ -18,14 +18,68 @@ The platform provides secure document storage, retrieval, sharing, and metadata 
 - IAM-based access management
 - AWS Systems Manager (SSM) for remote administration
 
-### Application Features
-- User authentication
-- Role-based authorization
-- Document upload
-- Document download
-- File sharing
-- File preview
-- Audit logging
+## Application Features
+
+### Authentication & Authorization
+
+* Secure user authentication
+* Role-based access control (RBAC)
+* Department-based authorization
+* Session-based access management
+* Admin-only management operations
+
+### Document Management
+
+* Document upload
+* Secure document download
+* File preview through pre-signed URLs
+* File metadata management
+* Soft-delete functionality
+* File restoration
+* Department-scoped document visibility
+
+### Collaboration Features
+
+* Document sharing across departments
+* Shared document access management
+* Remove shared access
+* Shared document dashboard
+
+### User Administration
+
+* Create users
+* Enable users
+* Disable users
+* Reset user passwords
+* View all registered users
+
+### Audit & Compliance
+
+* Centralized audit logging
+* Upload activity tracking
+* Share activity tracking
+* Delete and restore tracking
+* User administration activity tracking
+* Audit dashboard with timeline view
+
+### Dashboard Experience
+
+#### Administrator Dashboard
+
+* Platform-wide statistics
+* User metrics
+* Document metrics
+* Shared file metrics
+* Audit activity metrics
+* Recent audit timeline
+
+#### User Dashboard
+
+* Personal file statistics
+* Shared document visibility
+* Deleted file visibility
+* Recent document management
+
 
 ### DevOps & Automation
 - Dockerized application deployment
@@ -243,6 +297,7 @@ document-platform/
 │   ├── routes/
 │   ├── services/
 │   ├── templates/
+|   ├── static/
 │   ├── utils/
 │   ├── app.py
 │   └── Dockerfile
@@ -265,15 +320,49 @@ document-platform/
 
 # Screenshots
 
+## Landing page
+
+![Home](docs/screenshots/landing-page.png)
+
+---
+
 ## Login Page
 
 ![Login](docs/screenshots/login-page.png)
 
 ---
 
-## Application Dashboard
+## Admin Dashboard
 
-![Application Dashboard](docs/screenshots/application-home.png)
+![Admin Dashboard](docs/screenshots/admin-dash.png)
+
+---
+## Audit Log Dashboard
+
+![Audit Dashboard](docs/screenshots/audit-dashboard.png)
+
+---
+
+## User Management
+
+![User Management](docs/screenshots/user-management.png)
+
+---
+
+## User Dashboard
+
+![User Dashboard](docs/screenshots/user-dash.png)
+
+---
+## Share Document
+
+![Share Document](docs/screenshots/share-document.png)
+
+---
+
+## Upload Document
+
+![Upload Document](docs/screenshots/upload-document.png)
 
 ---
 
@@ -369,11 +458,16 @@ No manual server access is required during deployment.
 
 ### Platform Features
 
-- User Management Dashboard
-- Audit Log Dashboard
-- File Versioning
-- Department-Based Access Controls
-- Advanced Search
+* Advanced Search & Filtering
+* File Versioning
+* Department Management
+* Activity Notifications
+* Bulk Upload Support
+* Folder Hierarchy
+* Document Expiration Policies
+* Public Share Links
+* Multi-Factor Authentication (MFA)
+* User Profile Management
 
 ### Platform Engineering
 
