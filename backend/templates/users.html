@@ -37,6 +37,7 @@
     <th>Username</th>
     <th>Role</th>
     <th>Status</th>
+    <th>Action</th>
 </tr>
 
 {% for user in users %}
@@ -48,13 +49,42 @@
 <td>{{ user.role }}</td>
 
 <td>
-    {% if user.active %}
+    {% if user.get('active', True) %}
         Active
     {% else %}
         Disabled
     {% endif %}
 </td>
 
+<td>
+    {% if user.username != "admin" %}
+
+        {% if user.get('active', True) %}
+
+            <a href="/users/reset/{{ user.username }}">
+                Reset Password
+            </a>
+
+            |
+
+            <a href="/users/disable/{{ user.username }}">
+	        Disable
+	    </a>
+        {% else %}
+            <a href="/users/reset/{{ user.username }}">
+                Reset Password
+            </a>
+
+            |
+
+            <a href="/users/enable/{{ user.username }}">
+                Enable
+            </a>
+
+        {% endif %}
+
+    {% endif %}
+</td>
 </tr>
 
 {% endfor %}

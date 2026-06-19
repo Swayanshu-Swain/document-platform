@@ -16,7 +16,10 @@ def authenticate_user(
     if not user:
         return None
 
-    if not user.get("active"):
+    if not user.get(
+        "active",
+        True
+    ):
         return None
 
     stored_hash = user["password"]

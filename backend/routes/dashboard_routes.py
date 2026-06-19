@@ -69,6 +69,11 @@ def dashboard():
         <a href="/users">
             Manage Users
         </a>
+        |
+
+        <a href="/audit">
+            Audit Logs
+        </a>
     </p>"""
 
     html+=f"""<a href="/upload">

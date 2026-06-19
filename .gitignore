@@ -16,3 +16,5 @@ awscliv2.zip
 *.zip
 
 terraform/session-manager-plugin.deb
+
+scripts/test-local.sh
