@@ -65,3 +65,10 @@ def log_event(
                 details
         }
     )
+def get_total_audit_events():
+
+    response = audit_table.scan()
+
+    return len(
+        response["Items"]
+    )
