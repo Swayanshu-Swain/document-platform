@@ -1,228 +1,494 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard | Document Platform{% endblock %}
+
 {% block page_header %}Dashboard{% endblock %}
-
-{% block content %}
-
-<div class="ac-page-header">
-  <div>
-    <div class="ac-page-title">Welcome back, {{ username }}</div>
-    <p class="ac-page-subtitle mb-0">
-      Signed in as
-      {% if role == 'admin' %}
-        <span class="ac-badge ac-badge-shared">Admin</span>
-      {% else %}
-        <span class="ac-badge ac-badge-neutral">{{ role | capitalize }}</span>
-      {% endif %}
-    </p>
-  </div>
-  <div class="d-flex gap-2">
-    <a href="/upload" class="btn btn-gradient">
-      <i class="bi bi-cloud-arrow-up-fill"></i> Upload File
-    </a>
-  </div>
-</div>
-
-<!-- ============ STATISTIC CARDS ============ -->
-<div class="row g-4 mb-5">
-
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="ac-stat-card ac-card-interactive h-100">
-      <div class="ac-stat-icon">
-        <i class="bi bi-people-fill fs-5"></i>
-      </div>
-      <div class="ac-stat-value">{{ total_users }}</div>
-      <div class="ac-stat-label">Total Users</div>
-    </div>
-  </div>
-
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="ac-stat-card ac-card-interactive h-100">
-      <div class="ac-stat-icon" style="background: var(--ac-info-bg); color: var(--ac-accent);">
-        <i class="bi bi-file-earmark-text-fill fs-5"></i>
-      </div>
-      <div class="ac-stat-value">{{ total_documents }}</div>
-      <div class="ac-stat-label">Documents</div>
-    </div>
-  </div>
-
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="ac-stat-card ac-card-interactive h-100">
-      <div class="ac-stat-icon" style="background: var(--ac-success-bg); color: var(--ac-success-text);">
-        <i class="bi bi-share-fill fs-5"></i>
-      </div>
-      <div class="ac-stat-value">{{ total_shared }}</div>
-      <div class="ac-stat-label">Shared Files</div>
-    </div>
-  </div>
-
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="ac-stat-card ac-card-interactive h-100">
-      <div class="ac-stat-icon" style="background: var(--ac-warning-bg); color: var(--ac-warning-text);">
-        <i class="bi bi-shield-lock-fill fs-5"></i>
-      </div>
-      <div class="ac-stat-value">{{ total_audit_events }}</div>
-      <div class="ac-stat-label">Audit Events</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ============ RECENT DOCUMENTS TABLE ============ -->
-<div class="ac-card mb-4">
-  <div class="ac-card-header">
-    <div>
-      <div class="ac-card-title">Recent Documents</div>
-      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Latest files uploaded or modified across the platform</p>
-    </div>
-    <span class="ac-badge ac-badge-neutral">{{ recent_documents|length }} shown</span>
-  </div>
-
-  <div class="ac-card-body">
-    {% if recent_documents|length == 0 %}
-      <div class="ac-empty-state">
-        <div class="ac-empty-icon"><i class="bi bi-folder2-open fs-3"></i></div>
-        <h3 class="h6">No documents yet</h3>
-        <p class="ac-text-muted mb-0">Uploaded files will appear here.</p>
-      </div>
-    {% else %}
-      <div class="ac-table-wrap">
-        <table class="ac-table">
-          <thead>
-            <tr>
-              <th>File</th>
-              <th>Owner</th>
-              <th>Status</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for file in recent_documents %}
-            <tr>
-              <td class="ac-cell-primary">
-                <i class="bi bi-file-earmark-text-fill ac-text-muted me-2"></i>{{ file.display_name }}
-              </td>
-              <td class="ac-cell-muted">{{ file.owner }}</td>
-              <td>
-                {% if file.status == 'shared' %}
-                  <span class="ac-badge ac-badge-shared">Shared</span>
-                {% elif file.status == 'disabled' %}
-                  <span class="ac-badge ac-badge-disabled">Disabled</span>
-                {% else %}
-                  <span class="ac-badge ac-badge-active">Active</span>
-                {% endif %}
-              </td>
-              <td>
-                <div class="ac-table-actions">
-                  <a href="/file/{{ file.file_id }}" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-eye"></i> View
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-  </div>
-</div>
-
-<!-- ============ RECENT AUDIT ACTIVITY TIMELINE ============ -->
-<div class="ac-card">
-  <div class="ac-card-header">
-    <div>
-      <div class="ac-card-title">Recent Audit Activity</div>
-      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Live feed of the latest security and access events</p>
-    </div>
-    <a href="/audit-logs" class="btn btn-outline-primary btn-sm">
-      View All <i class="bi bi-arrow-right"></i>
-    </a>
-  </div>
-
-  <div class="ac-card-body">
-    {% if audit_events|length == 0 %}
-      <div class="ac-empty-state">
-        <div class="ac-empty-icon"><i class="bi bi-clock-history fs-3"></i></div>
-        <h3 class="h6">No recent activity</h3>
-        <p class="ac-text-muted mb-0">Audit events will appear here as they happen.</p>
-      </div>
-    {% else %}
-      <div class="ac-timeline">
-        {% for event in audit_events %}
-        <div class="ac-timeline-item">
-          <div class="ac-timeline-marker
-            {% if event.type == 'shared' %}ac-marker-shared
-            {% elif event.type == 'disabled' %}ac-marker-disabled
-            {% else %}ac-marker-active{% endif %}">
-          </div>
-          <div class="ac-timeline-content">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <div class="d-flex align-items-center gap-2">
-                <span class="ac-fw-semibold">{{ event.action }}</span>
-                {% if event.type == 'shared' %}
-                  <span class="ac-badge ac-badge-shared">Shared</span>
-                {% elif event.type == 'disabled' %}
-                  <span class="ac-badge ac-badge-disabled">Disabled</span>
-                {% else %}
-                  <span class="ac-badge ac-badge-active">Active</span>
-                {% endif %}
-              </div>
-              <span class="ac-text-faint" style="font-size: var(--ac-fs-xs);">
-                <i class="bi bi-clock"></i> {{ event.timestamp }}
-              </span>
-            </div>
-            <p class="ac-text-muted mb-1 mt-1" style="font-size: var(--ac-fs-sm);">{{ event.details }}</p>
-            <span class="ac-text-faint" style="font-size: var(--ac-fs-xs);">
-              <i class="bi bi-person-circle"></i> {{ event.username }}
-            </span>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </div>
-</div>
-
-{% endblock %}
 
 {% block extra_css %}
 <style>
+  /* ---- Header welcome row ---- */
+  .ac-welcome-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--ac-space-3);
+  }
+
+  .ac-welcome-text {
+    display: flex;
+    align-items: center;
+    gap: var(--ac-space-3);
+    flex-wrap: wrap;
+  }
+
+  /* ---- Metric grid ---- */
+  .ac-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--ac-space-5);
+  }
+  .ac-metric-grid.ac-metric-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 991.98px) {
+    .ac-metric-grid,
+    .ac-metric-grid.ac-metric-grid-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 575.98px) {
+    .ac-metric-grid,
+    .ac-metric-grid.ac-metric-grid-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---- Section heading ---- */
+  .ac-section-heading {
+    margin: var(--ac-space-7) 0 var(--ac-space-5);
+  }
+  .ac-section-heading .ac-page-title {
+    font-size: var(--ac-fs-xl);
+    margin-bottom: 2px;
+  }
+  .ac-section-heading .ac-page-subtitle {
+    font-size: var(--ac-fs-sm);
+  }
+
+  /* ---- Document card grid ---- */
+  .ac-doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--ac-space-4);
+  }
+
+  .ac-doc-card-full {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ac-space-3);
+  }
+
+  .ac-doc-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ac-space-3);
+  }
+
+  .ac-doc-icon-lg {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--ac-radius-md);
+    background: var(--ac-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ac-primary);
+    flex-shrink: 0;
+    font-size: 1.15rem;
+  }
+
+  .ac-doc-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ac-doc-name {
+    font-weight: var(--ac-fw-semibold);
+    color: var(--ac-text);
+    font-size: var(--ac-fs-base);
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ac-doc-sub {
+    font-size: var(--ac-fs-xs);
+    color: var(--ac-text-muted);
+  }
+
+  .ac-doc-card-actions {
+    display: flex;
+    gap: var(--ac-space-2);
+    margin-top: auto;
+    padding-top: var(--ac-space-3);
+    border-top: 1px solid var(--ac-border-soft);
+  }
+
+  .ac-doc-card-actions .btn {
+    flex: 1;
+    padding: 7px 10px;
+    font-size: var(--ac-fs-xs);
+  }
+
+  /* ---- Audit timeline ---- */
   .ac-timeline {
     position: relative;
-    padding-left: 8px;
+    padding-left: 36px;
+  }
+
+  .ac-timeline::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--ac-border);
   }
 
   .ac-timeline-item {
-    display: flex;
-    gap: var(--ac-space-4);
-    padding: var(--ac-space-4) 0;
-    border-bottom: 1px solid var(--ac-border-soft);
-    transition: var(--ac-transition);
+    position: relative;
+    padding-bottom: var(--ac-space-5);
+  }
+  .ac-timeline-item:last-child {
+    padding-bottom: 0;
   }
 
-  .ac-timeline-item:hover {
-    background: rgba(91, 91, 214, 0.03);
-    border-radius: var(--ac-radius-sm);
-  }
-
-  .ac-timeline-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .ac-timeline-item:first-child { padding-top: 0; }
-
-  .ac-timeline-marker {
-    width: 10px;
-    height: 10px;
+  .ac-timeline-dot {
+    position: absolute;
+    left: -36px;
+    top: 2px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    margin-top: 6px;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 4px var(--ac-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    border: 2px solid #fff;
+    box-shadow: var(--ac-shadow-sm);
   }
 
-  .ac-marker-active { background: var(--ac-success); }
-  .ac-marker-disabled { background: var(--ac-danger); }
-  .ac-marker-shared { background: var(--ac-accent); }
+  .ac-timeline-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--ac-border-soft);
+    border-radius: var(--ac-radius-md);
+    padding: var(--ac-space-3) var(--ac-space-4);
+  }
 
-  .ac-timeline-content { flex: 1; min-width: 0; }
+  .ac-timeline-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ac-space-2);
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+  }
+
+  .ac-timeline-action {
+    font-weight: var(--ac-fw-semibold);
+    font-size: var(--ac-fs-sm);
+    color: var(--ac-text);
+  }
+
+  .ac-timeline-time {
+    font-size: var(--ac-fs-xs);
+    color: var(--ac-text-faint);
+    white-space: nowrap;
+  }
+
+  .ac-timeline-user {
+    font-size: var(--ac-fs-xs);
+    color: var(--ac-text-muted);
+    margin-bottom: 2px;
+  }
+
+  .ac-timeline-details {
+    font-size: var(--ac-fs-xs);
+    color: var(--ac-text-muted);
+  }
+
+  /* Timeline dot color variants */
+  .ac-dot-green   { background: var(--ac-success-bg); color: var(--ac-success-text); }
+  .ac-dot-blue    { background: var(--ac-info-bg);    color: var(--ac-info-text); }
+  .ac-dot-red     { background: var(--ac-danger-bg);  color: var(--ac-danger-text); }
+  .ac-dot-yellow  { background: var(--ac-warning-bg); color: var(--ac-warning-text); }
+  .ac-dot-purple  { background: var(--ac-primary-light); color: var(--ac-primary-dark); }
+  .ac-dot-orange  { background: #FFE8D4; color: #B45309; }
 </style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== HEADER ===== -->
+<div class="ac-page-header">
+  <div class="ac-welcome-row" style="width:100%;">
+    <div class="ac-welcome-text">
+      <div>
+        <h1 class="ac-page-title">Welcome back, {{ username }}</h1>
+        <p class="ac-page-subtitle">Here's what's happening across your workspace today.</p>
+      </div>
+      {% if role == "admin" %}
+        <span class="ac-badge ac-badge-shared"><i class="bi bi-shield-fill-check"></i> Admin</span>
+      {% else %}
+        <span class="ac-badge ac-badge-neutral"><i class="bi bi-person-fill"></i> {{ role | capitalize }}</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <a href="{{ url_for('file.upload_file') }}" class="btn btn-gradient">
+        <i class="bi bi-cloud-arrow-up-fill"></i> Upload File
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN METRICS ===== -->
+{% if role == "admin" %}
+<div class="ac-metric-grid">
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-people-fill"></i></div>
+    <div class="ac-stat-value">{{ total_users }}</div>
+    <div class="ac-stat-label">Total Users</div>
+  </div>
+
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+    <div class="ac-stat-value">{{ total_documents }}</div>
+    <div class="ac-stat-label">Total Documents</div>
+  </div>
+
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-share-fill"></i></div>
+    <div class="ac-stat-value">{{ total_shared }}</div>
+    <div class="ac-stat-label">Shared Files</div>
+  </div>
+
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-clock-history"></i></div>
+    <div class="ac-stat-value">{{ total_audit_events }}</div>
+    <div class="ac-stat-label">Audit Events</div>
+  </div>
+</div>
+
+<!-- ===== NON-ADMIN METRICS ===== -->
+{% else %}
+<div class="ac-metric-grid ac-metric-grid-3">
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-file-earmark-fill"></i></div>
+    <div class="ac-stat-value">{{ owned_files|length }}</div>
+    <div class="ac-stat-label">My Files</div>
+  </div>
+
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-share-fill"></i></div>
+    <div class="ac-stat-value">{{ shared_files|length }}</div>
+    <div class="ac-stat-label">Shared With Me</div>
+  </div>
+
+  <div class="ac-stat-card">
+    <div class="ac-stat-icon"><i class="bi bi-trash3-fill"></i></div>
+    <div class="ac-stat-value">{{ deleted_files|length }}</div>
+    <div class="ac-stat-label">Deleted Files</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ===== RECENT DOCUMENTS ===== -->
+<div class="ac-section-heading">
+  <h2 class="ac-page-title">Recent Documents</h2>
+  <p class="ac-page-subtitle">Documents available to you</p>
+</div>
+
+{% if owned_files|length > 0 %}
+<div class="ac-doc-grid">
+  {% for file in owned_files %}
+  <div class="ac-doc-card ac-doc-card-full">
+    <div class="ac-doc-card-top">
+      <div class="ac-doc-icon-lg">
+        {% set ext = file.display_name.split('.')[-1] | lower %}
+        {% if ext == 'pdf' %}
+          <i class="bi bi-file-earmark-pdf-fill"></i>
+        {% elif ext in ['png', 'jpg', 'jpeg'] %}
+          <i class="bi bi-image-fill"></i>
+        {% else %}
+          <i class="bi bi-file-earmark-fill"></i>
+        {% endif %}
+      </div>
+      <div class="ac-doc-meta">
+        <div class="ac-doc-name" title="{{ file.display_name }}">{{ file.display_name }}</div>
+        <div class="ac-doc-sub">Uploaded by {{ file.uploaded_by }}</div>
+        <div class="ac-doc-sub">{{ file.department }}</div>
+        <div class="mt-2">
+          {% if file.status == "ACTIVE" %}
+            <span class="ac-badge ac-badge-active">Active</span>
+          {% else %}
+            <span class="ac-badge ac-badge-disabled">Deleted</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-doc-card-actions">
+      <a href="/file/{{ file.file_id }}" class="btn btn-outline-primary">
+        <i class="bi bi-box-arrow-up-right"></i> Open
+      </a>
+      <a href="/share/{{ file.file_id }}" class="btn btn-secondary">
+        <i class="bi bi-share-fill"></i> Share
+      </a>
+      <a href="/delete/{{ file.file_id }}" class="btn btn-danger">
+        <i class="bi bi-trash3-fill"></i> Delete
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="ac-card">
+  <div class="ac-empty-state">
+    <div class="ac-empty-icon"><i class="bi bi-file-earmark-x fs-3"></i></div>
+    <h3 class="mb-1">No Documents Yet</h3>
+    <p class="mb-0">Upload your first file to get started.</p>
+  </div>
+</div>
+{% endif %}
+
+<!-- ===== SHARED WITH ME ===== -->
+{% if shared_files|length > 0 %}
+<div class="ac-section-heading">
+  <h2 class="ac-page-title">Shared With Me</h2>
+  <p class="ac-page-subtitle">Files other people have shared with you</p>
+</div>
+
+<div class="ac-doc-grid">
+  {% for file in shared_files %}
+  <div class="ac-doc-card ac-doc-card-full">
+    <div class="ac-doc-card-top">
+      <div class="ac-doc-icon-lg">
+        {% set ext = file.display_name.split('.')[-1] | lower %}
+        {% if ext == 'pdf' %}
+          <i class="bi bi-file-earmark-pdf-fill"></i>
+        {% elif ext in ['png', 'jpg', 'jpeg'] %}
+          <i class="bi bi-image-fill"></i>
+        {% else %}
+          <i class="bi bi-file-earmark-fill"></i>
+        {% endif %}
+      </div>
+      <div class="ac-doc-meta">
+        <div class="ac-doc-name" title="{{ file.display_name }}">{{ file.display_name }}</div>
+        <div class="ac-doc-sub">Uploaded by {{ file.uploaded_by }}</div>
+        <div class="ac-doc-sub">{{ file.department }}</div>
+        <div class="mt-2">
+          {% if file.status == "ACTIVE" %}
+            <span class="ac-badge ac-badge-active">Active</span>
+          {% else %}
+            <span class="ac-badge ac-badge-disabled">Deleted</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-doc-card-actions">
+      <a href="/file/{{ file.file_id }}" class="btn btn-outline-primary">
+        <i class="bi bi-box-arrow-up-right"></i> Open
+      </a>
+      <a href="/delete/{{ file.file_id }}" class="btn btn-danger">
+        <i class="bi bi-x-circle-fill"></i> Remove Access
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ===== DELETED FILES ===== -->
+{% if deleted_files|length > 0 %}
+<div class="ac-section-heading">
+  <h2 class="ac-page-title">Deleted Files</h2>
+  <p class="ac-page-subtitle">Files moved to trash — restore before they're permanently removed</p>
+</div>
+
+<div class="ac-doc-grid">
+  {% for file in deleted_files %}
+  <div class="ac-doc-card ac-doc-card-full">
+    <div class="ac-doc-card-top">
+      <div class="ac-doc-icon-lg">
+        {% set ext = file.display_name.split('.')[-1] | lower %}
+        {% if ext == 'pdf' %}
+          <i class="bi bi-file-earmark-pdf-fill"></i>
+        {% elif ext in ['png', 'jpg', 'jpeg'] %}
+          <i class="bi bi-image-fill"></i>
+        {% else %}
+          <i class="bi bi-file-earmark-fill"></i>
+        {% endif %}
+      </div>
+      <div class="ac-doc-meta">
+        <div class="ac-doc-name" title="{{ file.display_name }}">{{ file.display_name }}</div>
+        <div class="ac-doc-sub">Uploaded by {{ file.uploaded_by }}</div>
+        <div class="ac-doc-sub">{{ file.department }}</div>
+        <div class="mt-2">
+          <span class="ac-badge ac-badge-disabled">Deleted</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ac-doc-card-actions">
+      <a href="/restore/{{ file.file_id }}" class="btn btn-success">
+        <i class="bi bi-arrow-counterclockwise"></i> Restore
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if role == "admin" %}
+  <!-- ===== AUDIT TIMELINE ===== -->
+  <div class="ac-section-heading">
+    <h2 class="ac-page-title">Recent Audit Activity</h2>
+    <p class="ac-page-subtitle">Latest security and platform events</p>
+  </div>
+
+  {% if audit_events|length > 0 %}
+  <div class="ac-card">
+    <div class="ac-timeline">
+      {% for event in audit_events %}
+      <div class="ac-timeline-item">
+        {% if event.action == "UPLOAD" %}
+          <div class="ac-timeline-dot ac-dot-green"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+        {% elif event.action == "SHARE" %}
+          <div class="ac-timeline-dot ac-dot-blue"><i class="bi bi-share-fill"></i></div>
+        {% elif event.action == "DELETE" %}
+          <div class="ac-timeline-dot ac-dot-red"><i class="bi bi-trash3-fill"></i></div>
+        {% elif event.action == "RESTORE" %}
+          <div class="ac-timeline-dot ac-dot-yellow"><i class="bi bi-arrow-counterclockwise"></i></div>
+        {% elif event.action == "CREATE_USER" %}
+          <div class="ac-timeline-dot ac-dot-purple"><i class="bi bi-person-plus-fill"></i></div>
+        {% elif event.action == "DISABLE_USER" %}
+          <div class="ac-timeline-dot ac-dot-red"><i class="bi bi-person-dash-fill"></i></div>
+        {% elif event.action == "ENABLE_USER" %}
+          <div class="ac-timeline-dot ac-dot-green"><i class="bi bi-person-check-fill"></i></div>
+        {% elif event.action == "RESET_PASSWORD" %}
+          <div class="ac-timeline-dot ac-dot-orange"><i class="bi bi-key-fill"></i></div>
+        {% else %}
+          <div class="ac-timeline-dot ac-dot-blue"><i class="bi bi-info-circle-fill"></i></div>
+        {% endif %}
+
+        <div class="ac-timeline-card">
+          <div class="ac-timeline-top">
+            <span class="ac-timeline-action">{{ event.action | replace('_', ' ') | title }}</span>
+            <span class="ac-timeline-time">{{ event.timestamp }}</span>
+          </div>
+          <div class="ac-timeline-user"><i class="bi bi-person-fill"></i> {{ event.username }}</div>
+          {% if event.details %}
+          <div class="ac-timeline-details">{{ event.details }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="ac-card">
+    <div class="ac-empty-state">
+      <div class="ac-empty-icon"><i class="bi bi-clock-history fs-3"></i></div>
+      <h3 class="mb-1">No Recent Activity</h3>
+      <p class="mb-0">Platform activity will appear here as it happens.</p>
+    </div>
+  </div>
+  {% endif %}
+{% endif %}
+
 {% endblock %}

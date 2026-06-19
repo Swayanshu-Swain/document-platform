@@ -119,9 +119,8 @@ def upload_file():
             f"Audit log failed: {e}"
         )
 
-    return (
-        f"Uploaded "
-        f"{file.filename}"
+    return redirect(
+    "/dashboard"
     )
 @file_bp.route(
     "/file/<file_id>"

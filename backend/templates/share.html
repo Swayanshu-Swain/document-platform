@@ -1,47 +1,170 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Share File</title>
-</head>
+{% block title %}Share Document | Document Platform{% endblock %}
 
-<body>
+{% block page_header %}Share Document{% endblock %}
 
-    <h2>
-        Share {{ file.display_name }}
-    </h2>
+{% block extra_css %}
+<style>
+  .ac-share-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
 
-    <form method="POST">
+  .ac-doc-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--ac-space-4);
+  }
 
-        <select
-            name="username"
-            required
-        >
+  .ac-doc-summary-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--ac-radius-md);
+    background: var(--ac-primary-light);
+    color: var(--ac-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
 
-            {% for user in users %}
+  .ac-doc-summary-name {
+    font-size: var(--ac-fs-lg);
+    font-weight: var(--ac-fw-semibold);
+    color: var(--ac-text);
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-            <option
-                value="{{ user.username }}"
-            >
-                {{ user.username }}
-            </option>
+  .ac-doc-summary-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ac-space-4);
+  }
 
-            {% endfor %}
+  .ac-doc-summary-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--ac-fs-sm);
+    color: var(--ac-text-muted);
+  }
 
-        </select>
+  .ac-doc-summary-meta-item i {
+    color: var(--ac-primary);
+  }
 
-        <button type="submit">
-            Share
-        </button>
+  .ac-share-form-actions {
+    display: flex;
+    gap: var(--ac-space-3);
+    margin-top: var(--ac-space-5);
+  }
 
-    </form>
+  .ac-share-form-actions .btn {
+    flex: 1;
+  }
 
-    <br>
+  .ac-back-row {
+    margin-bottom: var(--ac-space-5);
+  }
 
-    <a href="/dashboard">
-        Back
+  @media (max-width: 575.98px) {
+    .ac-doc-summary {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+    .ac-share-form-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="ac-share-wrap">
+
+  <!-- ===== PAGE HEADER ===== -->
+  <div class="ac-page-header">
+    <div>
+      <h1 class="ac-page-title">Share Document</h1>
+      <p class="ac-page-subtitle">Grant access to other platform users</p>
+    </div>
+  </div>
+
+  <div class="ac-back-row">
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back to Dashboard
     </a>
+  </div>
 
-</body>
+  <!-- ===== DOCUMENT SUMMARY CARD ===== -->
+  <div class="ac-card mb-4">
+    <div class="ac-card-header">
+      <h3 class="ac-card-title">Document Details</h3>
+    </div>
+    <div class="ac-card-body">
+      <div class="ac-doc-summary">
+        <div class="ac-doc-summary-icon">
+          {% set ext = file.display_name.split('.')[-1] | lower %}
+          {% if ext == 'pdf' %}
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+          {% elif ext in ['png', 'jpg', 'jpeg'] %}
+            <i class="bi bi-image-fill"></i>
+          {% else %}
+            <i class="bi bi-file-earmark-fill"></i>
+          {% endif %}
+        </div>
+        <div>
+          <div class="ac-doc-summary-name" title="{{ file.display_name }}">{{ file.display_name }}</div>
+          <div class="ac-doc-summary-meta">
+            <span class="ac-doc-summary-meta-item">
+              <i class="bi bi-diagram-3-fill"></i> {{ file.department }}
+            </span>
+            <span class="ac-doc-summary-meta-item">
+              <i class="bi bi-person-fill"></i> {{ file.uploaded_by }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</html>
+  <!-- ===== SHARE FORM CARD ===== -->
+  <div class="ac-card">
+    <div class="ac-card-header">
+      <h3 class="ac-card-title">Grant Access</h3>
+    </div>
+    <div class="ac-card-body">
+      <form method="POST" action="/share/{{ file.file_id }}">
+        <div class="mb-4">
+          <label for="username" class="form-label">Select User</label>
+          <select name="username" id="username" class="form-select" required>
+            <option value="" disabled selected>Choose a user to share with...</option>
+            {% for user in users %}
+              <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+          <div class="form-text">The selected user will be granted access to view this document.</div>
+        </div>
+
+        <div class="ac-share-form-actions">
+          <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline-primary">
+            <i class="bi bi-x-lg"></i> Cancel
+          </a>
+          <button type="submit" class="btn btn-gradient">
+            <i class="bi bi-share-fill"></i> Share Access
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
