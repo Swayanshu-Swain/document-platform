@@ -295,3 +295,30 @@ def restore_file(
             ":status":"ACTIVE"
         }
     )
+def get_total_documents():
+
+    response = files_table.scan()
+
+    return len(
+        response["Items"]
+    )
+
+
+def get_total_shared():
+
+    response = files_table.scan()
+
+    count = 0
+
+    for item in response["Items"]:
+
+        if len(
+            item.get(
+                "shared_with",
+                []
+            )
+        ) > 0:
+
+            count += 1
+
+    return count
