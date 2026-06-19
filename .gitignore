@@ -3,18 +3,30 @@ backend/venv/
 *.pyc
 
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 
 .terraform/
 .terraform.lock.hcl
+terraform.tfvars
 
 *.pem
 
 .env
 
+aws/
 awscliv2.zip
 *.zip
 
 terraform/session-manager-plugin.deb
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
 
 scripts/test-local.sh
