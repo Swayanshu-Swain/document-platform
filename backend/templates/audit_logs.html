@@ -1,46 +1,107 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Audit Logs</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>Audit Logs</h2>
+{% block title %}Audit Logs{% endblock %}
+{% block page_header %}Audit Logs{% endblock %}
 
-<a href="/dashboard">Dashboard</a>
+{% block content %}
 
-|
+<div class="ac-page-header">
+  <div>
+    <div class="ac-page-title">Audit Logs</div>
+    <p class="ac-page-subtitle mb-0">Complete history of security and access events across the platform.</p>
+  </div>
+</div>
 
-<a href="/users">Users</a>
+<!-- ============ TOTAL LOG COUNT CARD ============ -->
+<div class="row g-4 mb-5">
+  <div class="col-12 col-md-4">
+    <div class="ac-stat-card h-100">
+      <div class="ac-stat-icon" style="background: var(--ac-info-bg); color: var(--ac-accent);">
+        <i class="bi bi-clock-history fs-5"></i>
+      </div>
+      <div class="ac-stat-value">{{ logs|length }}</div>
+      <div class="ac-stat-label">Total Log Entries</div>
+    </div>
+  </div>
+</div>
 
-<hr>
+<!-- ============ AUDIT LOG TABLE ============ -->
+<div class="ac-card">
+  <div class="ac-card-header">
+    <div>
+      <div class="ac-card-title">Event History</div>
+      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Chronological record of all platform actions</p>
+    </div>
+    <span class="ac-badge ac-badge-neutral">{{ logs|length }} events</span>
+  </div>
 
-<table border="1">
+  <div class="ac-card-body">
+    {% if logs|length == 0 %}
+      <div class="ac-empty-state">
+        <div class="ac-empty-icon"><i class="bi bi-journal-x fs-3"></i></div>
+        <h3 class="h6">No audit events recorded</h3>
+        <p class="ac-text-muted mb-0">Platform activity will be logged and displayed here as it occurs.</p>
+      </div>
+    {% else %}
+      <div class="ac-table-wrap">
+        <table class="ac-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Username</th>
+              <th>Action</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in logs %}
+            <tr>
+              <td class="ac-cell-muted" style="white-space: nowrap;">
+                <i class="bi bi-clock ac-text-faint me-1"></i>{{ log.timestamp }}
+              </td>
+              <td class="ac-cell-primary">
+                <i class="bi bi-person-circle ac-text-muted me-2"></i>{{ log.username }}
+              </td>
+              <td>
+                {% if log.action == "CREATE_USER" %}
+                  <span class="ac-badge ac-badge-active">Create User</span>
+                {% elif log.action == "DISABLE_USER" %}
+                  <span class="ac-badge ac-badge-disabled">Disable User</span>
+                {% elif log.action == "ENABLE_USER" %}
+                  <span class="ac-badge ac-badge-blue">Enable User</span>
+                {% elif log.action == "RESET_PASSWORD" %}
+                  <span class="ac-badge ac-badge-pending">Reset Password</span>
+                {% elif log.action == "UPLOAD" %}
+                  <span class="ac-badge ac-badge-blue">Upload</span>
+                {% elif log.action == "DELETE" %}
+                  <span class="ac-badge ac-badge-disabled">Delete</span>
+                {% elif log.action == "RESTORE" %}
+                  <span class="ac-badge ac-badge-active">Restore</span>
+                {% elif log.action == "SHARE" %}
+                  <span class="ac-badge ac-badge-shared">Share</span>
+                {% else %}
+                  <span class="ac-badge ac-badge-neutral">{{ log.action }}</span>
+                {% endif %}
+              </td>
+              <td class="ac-cell-muted">{{ log.details }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
 
-<tr>
-    <th>Timestamp</th>
-    <th>User</th>
-    <th>Action</th>
-    <th>Details</th>
-</tr>
+{% endblock %}
 
-{% for log in logs %}
-
-<tr>
-
-<td>{{ log.timestamp }}</td>
-
-<td>{{ log.username }}</td>
-
-<td>{{ log.action }}</td>
-
-<td>{{ log.details }}</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</body>
-</html>
+{% block extra_css %}
+<style>
+  /* Distinct solid-blue badge variant (ENABLE_USER / UPLOAD),
+     kept separate from the cyan ac-badge-shared used for SHARE */
+  .ac-badge-blue {
+    background: var(--ac-primary-light);
+    color: var(--ac-primary-dark);
+  }
+</style>
+{% endblock %}

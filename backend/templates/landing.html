@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Platform · Enterprise Document Management Built for Modern Teams</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<!-- Inter Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Aurora Cloud Design System -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+  /* ============ Landing-page-only styles ============ */
+  body { overflow-x: hidden; }
+
+  .lp-navbar {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--ac-border);
+    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .lp-navbar .lp-logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--ac-radius-sm);
+    background: var(--ac-grad-primary);
+    box-shadow: var(--ac-shadow-primary);
+  }
+  .lp-navbar .lp-logo-text {
+    font-weight: var(--ac-fw-extrabold);
+    font-size: var(--ac-fs-lg);
+    letter-spacing: -0.02em;
+    color: var(--ac-text);
+  }
+  .lp-nav-link {
+    color: var(--ac-text-muted);
+    font-weight: var(--ac-fw-medium);
+    font-size: var(--ac-fs-sm);
+  }
+  .lp-nav-link:hover { color: var(--ac-primary); }
+
+  /* ---- Hero ---- */
+  .lp-hero {
+    padding: 110px 0 100px;
+    position: relative;
+  }
+
+  .lp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--ac-glass-border);
+    color: var(--ac-primary-dark);
+    font-size: var(--ac-fs-xs);
+    font-weight: var(--ac-fw-semibold);
+    padding: 7px 16px;
+    border-radius: var(--ac-radius-pill);
+    margin-bottom: var(--ac-space-6);
+    box-shadow: var(--ac-shadow-xs);
+  }
+  .lp-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ac-grad-primary);
+  }
+
+  .lp-headline {
+    font-size: clamp(2.4rem, 4.6vw, 4rem);
+    font-weight: var(--ac-fw-black);
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+    color: var(--ac-text);
+    margin-bottom: var(--ac-space-5);
+  }
+  .lp-headline .grad {
+    background: var(--ac-grad-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lp-subtitle {
+    font-size: var(--ac-fs-md);
+    color: var(--ac-text-muted);
+    max-width: 540px;
+    margin-bottom: var(--ac-space-7);
+    line-height: 1.7;
+  }
+
+  /* ---- Floating SaaS mockup (right side) ---- */
+  .lp-mockup-wrap {
+    position: relative;
+    min-height: 520px;
+  }
+
+  .lp-mockup-frame {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: -10px;
+    bottom: 10px;
+    border-radius: var(--ac-radius-xl);
+    background: var(--ac-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--ac-glass-border);
+    box-shadow: var(--ac-shadow-xl);
+    padding: var(--ac-space-5);
+    overflow: hidden;
+  }
+
+  .lp-mockup-topbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: var(--ac-space-5);
+  }
+  .lp-mockup-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .lp-mock-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--ac-glass-border);
+    border-radius: var(--ac-radius-md);
+    padding: var(--ac-space-4);
+    margin-bottom: var(--ac-space-3);
+    box-shadow: var(--ac-shadow-sm);
+  }
+
+  .lp-mock-card-title {
+    font-size: var(--ac-fs-xs);
+    font-weight: var(--ac-fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ac-text-faint);
+    margin-bottom: var(--ac-space-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lp-mock-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    font-size: var(--ac-fs-sm);
+  }
+  .lp-mock-row + .lp-mock-row {
+    border-top: 1px solid var(--ac-border-soft);
+  }
+
+  .lp-floating-chip {
+    position: absolute;
+    background: var(--ac-card);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--ac-glass-border);
+    border-radius: var(--ac-radius-lg);
+    box-shadow: var(--ac-shadow-lg);
+    padding: var(--ac-space-3) var(--ac-space-4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 5;
+  }
+  .lp-chip-security { top: -16px; right: 20px; }
+  .lp-chip-storage { bottom: -18px; left: -24px; }
+
+  .lp-chip-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ac-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ---- Trust section ---- */
+  .lp-trust {
+    padding: var(--ac-space-7) 0;
+    border-top: 1px solid var(--ac-border-soft);
+    border-bottom: 1px solid var(--ac-border-soft);
+  }
+  .lp-trust-label {
+    font-size: var(--ac-fs-xs);
+    font-weight: var(--ac-fw-semibold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ac-text-faint);
+  }
+  .lp-trust-item {
+    font-weight: var(--ac-fw-bold);
+    font-size: var(--ac-fs-lg);
+    color: var(--ac-text-faint);
+    letter-spacing: -0.01em;
+    opacity: 0.6;
+    transition: var(--ac-transition);
+  }
+  .lp-trust-item:hover { opacity: 1; color: var(--ac-text-muted); }
+
+  /* ---- Section shared ---- */
+  .lp-section-label {
+    font-size: var(--ac-fs-xs);
+    font-weight: var(--ac-fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ac-primary);
+    margin-bottom: var(--ac-space-3);
+  }
+  .lp-section-title {
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+    font-weight: var(--ac-fw-extrabold);
+    letter-spacing: -0.03em;
+    margin-bottom: var(--ac-space-3);
+  }
+  .lp-section-subtitle {
+    color: var(--ac-text-muted);
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ---- Feature cards ---- */
+  .lp-feature-card {
+    background: var(--ac-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--ac-glass-border);
+    border-radius: var(--ac-radius-lg);
+    box-shadow: var(--ac-shadow-sm);
+    padding: var(--ac-space-6) var(--ac-space-5);
+    height: 100%;
+    transition: var(--ac-transition-slow);
+  }
+  .lp-feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--ac-shadow-lg), var(--ac-glow-primary);
+    border-color: rgba(123, 97, 255, 0.3);
+  }
+
+  .lp-feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--ac-radius-md);
+    background: var(--ac-grad-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: var(--ac-space-4);
+    box-shadow: var(--ac-shadow-primary);
+  }
+
+  /* ---- Architecture cards ---- */
+  .lp-arch-card {
+    background: var(--ac-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--ac-glass-border);
+    border-radius: var(--ac-radius-lg);
+    box-shadow: var(--ac-shadow-sm);
+    padding: var(--ac-space-5);
+    text-align: center;
+    height: 100%;
+    transition: var(--ac-transition-slow);
+  }
+  .lp-arch-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--ac-shadow-lg);
+    border-color: rgba(0, 212, 255, 0.3);
+  }
+
+  .lp-arch-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: var(--ac-radius-md);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--ac-glass-border);
+    color: var(--ac-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto var(--ac-space-4);
+  }
+
+  /* ---- CTA ---- */
+  .lp-cta {
+    background: var(--ac-grad-primary);
+    border-radius: var(--ac-radius-xl);
+    padding: 72px 48px;
+    text-align: center;
+    color: #fff;
+    box-shadow: var(--ac-shadow-xl);
+    position: relative;
+    overflow: hidden;
+  }
+  .lp-cta::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 320px;
+    height: 320px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    filter: blur(10px);
+  }
+  .lp-cta h2 {
+    color: #fff;
+    font-weight: var(--ac-fw-extrabold);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: -0.03em;
+    position: relative;
+    z-index: 1;
+  }
+  .lp-cta p {
+    color: rgba(255, 255, 255, 0.85);
+    position: relative;
+    z-index: 1;
+  }
+  .lp-cta .btn-light {
+    border-radius: var(--ac-radius-md);
+    font-weight: var(--ac-fw-semibold);
+    padding: 13px 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- Footer ---- */
+  .lp-footer {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--ac-border-soft);
+    padding: 40px 0;
+  }
+  .lp-footer-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--ac-radius-sm);
+    background: var(--ac-grad-primary);
+  }
+  .lp-footer p { margin-bottom: 0; font-size: var(--ac-fs-sm); }
+  .lp-footer-links a {
+    color: var(--ac-text-muted);
+    font-size: var(--ac-fs-sm);
+    margin-left: var(--ac-space-5);
+  }
+  .lp-footer-links a:hover { color: var(--ac-primary); }
+
+  @media (max-width: 991.98px) {
+    .lp-mockup-wrap { min-height: 380px; margin-top: 64px; }
+    .lp-mockup-frame { position: static; margin-top: var(--ac-space-6); }
+    .lp-chip-security, .lp-chip-storage { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ANIMATED AURORA BLOB BACKGROUND ============ -->
+<div class="ac-blob-field">
+  <div class="ac-blob ac-blob-1"></div>
+  <div class="ac-blob ac-blob-2"></div>
+  <div class="ac-blob ac-blob-3"></div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="lp-navbar">
+  <div class="container d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <div class="lp-logo-mark"></div>
+      <span class="lp-logo-text">Document Platform</span>
+    </div>
+    <div class="d-flex align-items-center gap-4">
+      <a href="#features" class="lp-nav-link d-none d-sm-inline">Features</a>
+      <a href="#architecture" class="lp-nav-link d-none d-sm-inline">Architecture</a>
+      <a href="/login" class="btn btn-gradient btn-sm">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="lp-hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <!-- LEFT -->
+      <div class="col-lg-6">
+        <span class="lp-eyebrow">
+          <span class="dot"></span> Enterprise Document Platform
+        </span>
+        <h1 class="lp-headline">
+          Enterprise Document Management <span class="grad">Built for Modern Teams</span>
+        </h1>
+        <p class="lp-subtitle">
+          Securely store, share, audit and govern documents across departments with
+          role-based access control, cloud-native infrastructure and complete audit visibility.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="/login" class="btn btn-gradient btn-lg">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </a>
+          <a href="#architecture" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-diagram-3"></i> View Architecture
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT: floating SaaS mockup -->
+      <div class="col-lg-6">
+        <div class="lp-mockup-wrap">
+
+          <div class="lp-floating-chip lp-chip-security ac-floating">
+            <div class="lp-chip-icon" style="background: var(--ac-success-bg); color: var(--ac-success-text);">
+              <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <div>
+              <div class="fw-semibold" style="font-size: var(--ac-fs-sm);">Encrypted</div>
+              <div class="ac-text-faint" style="font-size: var(--ac-fs-xs);">AES-256 at rest</div>
+            </div>
+          </div>
+
+          <div class="lp-mockup-frame ac-floating">
+            <div class="lp-mockup-topbar">
+              <span class="lp-mockup-dot" style="background:#EF4444;"></span>
+              <span class="lp-mockup-dot" style="background:#F59E0B;"></span>
+              <span class="lp-mockup-dot" style="background:#22C55E;"></span>
+              <span class="ms-2 ac-text-faint" style="font-size: var(--ac-fs-xs);">app.documentplatform.io</span>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="lp-mock-card">
+                  <div class="lp-mock-card-title"><i class="bi bi-file-earmark-text-fill"></i> Recent Documents</div>
+                  <div class="lp-mock-row">
+                    <span>Q2_Financial_Report.pdf</span>
+                    <span class="ac-badge ac-badge-active">Active</span>
+                  </div>
+                  <div class="lp-mock-row">
+                    <span>Vendor_Contract.docx</span>
+                    <span class="ac-badge ac-badge-shared">Shared</span>
+                  </div>
+                  <div class="lp-mock-row">
+                    <span>Roadmap_Draft.pptx</span>
+                    <span class="ac-badge ac-badge-disabled">Disabled</span>
+                  </div>
+                </div>
+
+                <div class="lp-mock-card mb-0">
+                  <div class="lp-mock-card-title"><i class="bi bi-pie-chart-fill"></i> Storage Usage</div>
+                  <div class="ac-progress mb-2">
+                    <div class="ac-progress-bar" style="width: 68%;"></div>
+                  </div>
+                  <div class="d-flex justify-content-between" style="font-size: var(--ac-fs-xs);">
+                    <span class="ac-text-faint">6.8 TB used</span>
+                    <span class="ac-text-faint">10 TB</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="lp-mock-card">
+                  <div class="lp-mock-card-title"><i class="bi bi-clock-history"></i> Audit Logs</div>
+                  <div class="lp-mock-row">
+                    <span class="ac-text-muted" style="font-size: var(--ac-fs-xs);">09:42 AM</span>
+                    <span>Document Shared</span>
+                  </div>
+                  <div class="lp-mock-row">
+                    <span class="ac-text-muted" style="font-size: var(--ac-fs-xs);">08:55 AM</span>
+                    <span>File Uploaded</span>
+                  </div>
+                  <div class="lp-mock-row">
+                    <span class="ac-text-muted" style="font-size: var(--ac-fs-xs);">08:30 AM</span>
+                    <span>Access Revoked</span>
+                  </div>
+                </div>
+
+                <div class="lp-mock-card mb-0">
+                  <div class="lp-mock-card-title"><i class="bi bi-people-fill"></i> User Activity</div>
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="ac-avatar" style="width:28px; height:28px; font-size: var(--ac-fs-xs);">S</div>
+                    <div class="ac-avatar" style="width:28px; height:28px; font-size: var(--ac-fs-xs); background: var(--ac-grad-secondary);">M</div>
+                    <div class="ac-avatar" style="width:28px; height:28px; font-size: var(--ac-fs-xs); background: var(--ac-accent);">J</div>
+                    <span class="ac-text-faint" style="font-size: var(--ac-fs-xs);">+24 online</span>
+                  </div>
+                  <span class="ac-badge ac-badge-active">Live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lp-floating-chip lp-chip-storage ac-floating ac-floating-delay-2">
+            <div class="lp-chip-icon" style="background: var(--ac-info-bg); color: var(--ac-accent);">
+              <i class="bi bi-cloud-arrow-up-fill"></i>
+            </div>
+            <div>
+              <div class="fw-semibold" style="font-size: var(--ac-fs-sm);">Synced to S3</div>
+              <div class="ac-text-faint" style="font-size: var(--ac-fs-xs);">Real-time backup</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST SECTION ============ -->
+<section class="lp-trust">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-12 col-md-3">
+        <span class="lp-trust-label">Trusted by enterprise teams in</span>
+      </div>
+      <div class="col-12 col-md-9">
+        <div class="d-flex flex-wrap justify-content-between gap-4">
+          <span class="lp-trust-item"><i class="bi bi-building"></i> Finance</span>
+          <span class="lp-trust-item"><i class="bi bi-heart-pulse"></i> Healthcare</span>
+          <span class="lp-trust-item"><i class="bi bi-bank"></i> Legal</span>
+          <span class="lp-trust-item"><i class="bi bi-gear-wide-connected"></i> Operations</span>
+          <span class="lp-trust-item"><i class="bi bi-mortarboard"></i> Education</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES SECTION ============ -->
+<section class="ac-section" id="features">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="lp-section-label">Platform Capabilities</div>
+      <h2 class="lp-section-title">Governance built into every layer</h2>
+      <p class="lp-section-subtitle">
+        Every document action is controlled, tracked, and recoverable — so your teams move fast without losing oversight.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="lp-feature-card">
+          <div class="lp-feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+          <h3 class="h6 fw-bold mb-2">Role-Based Access</h3>
+          <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">
+            Fine-grained permissions ensure every user only sees and manages what their role allows.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="lp-feature-card">
+          <div class="lp-feature-icon" style="background: var(--ac-grad-secondary);"><i class="bi bi-share-fill"></i></div>
+          <h3 class="h6 fw-bold mb-2">Document Sharing</h3>
+          <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">
+            Share files across teams and departments instantly, with full control over who has access.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="lp-feature-card">
+          <div class="lp-feature-icon" style="background: linear-gradient(135deg, #F59E0B, #EF4444);"><i class="bi bi-clock-history"></i></div>
+          <h3 class="h6 fw-bold mb-2">Audit Logging</h3>
+          <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">
+            Every action is tracked and timestamped, giving you a complete compliance trail on demand.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="lp-feature-card">
+          <div class="lp-feature-icon" style="background: linear-gradient(135deg, #22C55E, #00D4FF);"><i class="bi bi-cloud-fill"></i></div>
+          <h3 class="h6 fw-bold mb-2">Cloud-Native Deployment</h3>
+          <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">
+            Built on modern infrastructure for high availability, elastic scale, and resilience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARCHITECTURE SECTION ============ -->
+<section class="ac-section" id="architecture">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="lp-section-label">Under the Hood</div>
+      <h2 class="lp-section-title">Modern, cloud-native architecture</h2>
+      <p class="lp-section-subtitle">
+        Powered by industry-standard infrastructure for reliability, security, and effortless scale.
+      </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="lp-arch-card">
+          <div class="lp-arch-icon"><i class="bi bi-bucket-fill"></i></div>
+          <div class="fw-semibold">AWS S3</div>
+          <p class="ac-text-faint mb-0" style="font-size: var(--ac-fs-xs);">Object Storage</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="lp-arch-card">
+          <div class="lp-arch-icon"><i class="bi bi-database-fill"></i></div>
+          <div class="fw-semibold">DynamoDB</div>
+          <p class="ac-text-faint mb-0" style="font-size: var(--ac-fs-xs);">NoSQL Database</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="lp-arch-card">
+          <div class="lp-arch-icon"><i class="bi bi-box-seam-fill"></i></div>
+          <div class="fw-semibold">Docker</div>
+          <p class="ac-text-faint mb-0" style="font-size: var(--ac-fs-xs);">Containerization</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="lp-arch-card">
+          <div class="lp-arch-icon"><i class="bi bi-diagram-3-fill"></i></div>
+          <div class="fw-semibold">Terraform</div>
+          <p class="ac-text-faint mb-0" style="font-size: var(--ac-fs-xs);">Infrastructure as Code</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="lp-arch-card">
+          <div class="lp-arch-icon"><i class="bi bi-arrow-repeat"></i></div>
+          <div class="fw-semibold">GitHub Actions</div>
+          <p class="ac-text-faint mb-0" style="font-size: var(--ac-fs-xs);">CI/CD Pipeline</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CALL TO ACTION ============ -->
+<section class="ac-section-tight">
+  <div class="container">
+    <div class="lp-cta col-12 col-lg-9 mx-auto">
+      <h2 class="mb-3">Ready to manage documents at scale?</h2>
+      <p class="mb-4">Join enterprise teams who trust Document Platform for secure, governed document management.</p>
+      <a href="/login" class="btn btn-light btn-lg">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="lp-footer">
+  <div class="container d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+    <div class="d-flex align-items-center gap-2">
+      <div class="lp-footer-logo"></div>
+      <div>
+        <p class="fw-semibold mb-0" style="color: var(--ac-text);">Document Platform</p>
+        <p class="ac-text-faint">Powered by Flask, AWS, Docker and Terraform</p>
+      </div>
+    </div>
+    <div class="lp-footer-links">
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="/login">Login</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

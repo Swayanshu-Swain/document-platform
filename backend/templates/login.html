@@ -1,37 +1,444 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login · Document Platform</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<!-- Inter Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Aurora Cloud Design System -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+  html, body { height: 100%; }
+  body { overflow-x: hidden; }
+
+  .lg-screen {
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ============ LEFT PANEL (60%) ============ */
+  .lg-brand-panel {
+    flex: 0 0 60%;
+    max-width: 60%;
+    background: var(--ac-grad-primary);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 64px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient glow orbs */
+  .lg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+  }
+  .lg-glow-1 {
+    width: 420px;
+    height: 420px;
+    top: -140px;
+    left: -100px;
+    background: rgba(255, 255, 255, 0.16);
+    animation: ac-blob-float-1 20s ease-in-out infinite;
+  }
+  .lg-glow-2 {
+    width: 360px;
+    height: 360px;
+    bottom: -160px;
+    right: -100px;
+    background: rgba(0, 212, 255, 0.28);
+    animation: ac-blob-float-2 24s ease-in-out infinite;
+  }
+  .lg-glow-3 {
+    width: 260px;
+    height: 260px;
+    top: 40%;
+    right: 10%;
+    background: rgba(139, 92, 246, 0.3);
+    animation: ac-blob-float-3 26s ease-in-out infinite;
+  }
+
+  .lg-brand-content { position: relative; z-index: 2; max-width: 460px; }
+
+  .lg-brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--ac-space-8);
+  }
+  .lg-logo-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--ac-radius-sm);
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .lg-brand-title {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    font-weight: var(--ac-fw-black);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: var(--ac-space-3);
+  }
+
+  .lg-brand-subtitle {
+    font-size: var(--ac-fs-md);
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: var(--ac-space-7);
+  }
+
+  .lg-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--ac-space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ac-space-4);
+  }
+
+  .lg-feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: var(--ac-fw-medium);
+    font-size: var(--ac-fs-base);
+  }
+
+  .lg-feature-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--ac-radius-sm);
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  /* Floating glass document cards */
+  .lg-doc-stack {
+    position: relative;
+    height: 150px;
+  }
+
+  .lg-doc-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--ac-radius-md);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    width: 230px;
+  }
+
+  .lg-doc-card .ic {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .lg-doc-card-1 { top: 0; left: 0; animation: ac-floaty 5s ease-in-out infinite; }
+  .lg-doc-card-2 { top: 38px; left: 110px; animation: ac-floaty 5s ease-in-out infinite; animation-delay: 0.8s; }
+  .lg-doc-card-3 { top: 80px; left: 30px; animation: ac-floaty 5s ease-in-out infinite; animation-delay: 1.6s; }
+
+  /* ============ RIGHT PANEL (40%) ============ */
+  .lg-form-panel {
+    flex: 0 0 40%;
+    max-width: 40%;
+    background: var(--ac-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    position: relative;
+  }
+
+  .lg-form-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ac-grad-mesh);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .lg-login-card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--ac-card);
+    backdrop-filter: blur(var(--ac-glass-blur));
+    -webkit-backdrop-filter: blur(var(--ac-glass-blur));
+    border: 1px solid var(--ac-glass-border);
+    border-radius: var(--ac-radius-xl);
+    box-shadow: var(--ac-shadow-xl);
+    padding: var(--ac-space-7) var(--ac-space-6);
+    position: relative;
+    z-index: 1;
+    animation: lg-card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes lg-card-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .lg-login-header { text-align: center; margin-bottom: var(--ac-space-6); }
+
+  .lg-login-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: var(--ac-radius-md);
+    background: var(--ac-grad-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto var(--ac-space-4);
+    box-shadow: var(--ac-shadow-primary);
+  }
+
+  .lg-login-title {
+    font-size: var(--ac-fs-xl);
+    font-weight: var(--ac-fw-extrabold);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .lg-login-subtitle {
+    color: var(--ac-text-muted);
+    font-size: var(--ac-fs-sm);
+    margin-bottom: 0;
+  }
+
+  .lg-error-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--ac-danger-bg);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: var(--ac-danger-text);
+    border-radius: var(--ac-radius-md);
+    padding: var(--ac-space-3) var(--ac-space-4);
+    margin-bottom: var(--ac-space-5);
+    animation: lg-shake 0.4s ease;
+  }
+
+  @keyframes lg-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .lg-back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--ac-space-5);
+    font-size: var(--ac-fs-sm);
+    font-weight: var(--ac-fw-medium);
+    color: var(--ac-text-muted);
+    transition: var(--ac-transition);
+  }
+  .lg-back-link:hover {
+    color: var(--ac-primary);
+    transform: translateX(-2px);
+  }
+
+  .lg-submit-btn {
+    width: 100%;
+    transition: var(--ac-transition-slow);
+  }
+
+  @media (max-width: 991.98px) {
+    .lg-screen { flex-direction: column; }
+    .lg-brand-panel {
+      flex: 0 0 auto;
+      max-width: 100%;
+      padding: 48px 32px;
+    }
+    .lg-form-panel {
+      flex: 0 0 auto;
+      max-width: 100%;
+    }
+    .lg-feature-list, .lg-doc-stack { display: none; }
+  }
+</style>
 </head>
 <body>
 
-    <h2>Document Platform Login</h2>
+<div class="lg-screen">
 
-    <form method="POST">
+  <!-- ============ LEFT: BRAND PANEL (60%) ============ -->
+  <div class="lg-brand-panel">
+    <div class="lg-glow lg-glow-1"></div>
+    <div class="lg-glow lg-glow-2"></div>
+    <div class="lg-glow lg-glow-3"></div>
 
-        <label>Username</label>
-        <input
+    <div class="lg-brand-content">
+      <div class="lg-brand-logo">
+        <div class="lg-logo-mark"><i class="bi bi-cloud-fill"></i></div>
+        <span style="font-weight: var(--ac-fw-bold); font-size: var(--ac-fs-lg);">Document Platform</span>
+      </div>
+
+      <h1 class="lg-brand-title">Document Platform</h1>
+      <p class="lg-brand-subtitle">Enterprise Document Governance</p>
+
+      <ul class="lg-feature-list">
+        <li>
+          <span class="lg-feature-icon"><i class="bi bi-shield-lock-fill"></i></span>
+          Secure Storage
+        </li>
+        <li>
+          <span class="lg-feature-icon"><i class="bi bi-clock-history"></i></span>
+          Audit Logs
+        </li>
+        <li>
+          <span class="lg-feature-icon"><i class="bi bi-person-badge-fill"></i></span>
+          Role Based Access
+        </li>
+        <li>
+          <span class="lg-feature-icon"><i class="bi bi-cloud-fill"></i></span>
+          Cloud Native Infrastructure
+        </li>
+      </ul>
+
+      <!-- Floating glass document cards -->
+      <div class="lg-doc-stack">
+        <div class="lg-doc-card lg-doc-card-1">
+          <div class="ic"><i class="bi bi-file-earmark-text-fill"></i></div>
+          <div>
+            <div class="fw-semibold" style="font-size: var(--ac-fs-sm);">Q2_Report.pdf</div>
+            <div style="font-size: var(--ac-fs-xs); color: rgba(255,255,255,0.7);">Encrypted</div>
+          </div>
+        </div>
+        <div class="lg-doc-card lg-doc-card-2">
+          <div class="ic"><i class="bi bi-share-fill"></i></div>
+          <div>
+            <div class="fw-semibold" style="font-size: var(--ac-fs-sm);">Shared with Legal</div>
+            <div style="font-size: var(--ac-fs-xs); color: rgba(255,255,255,0.7);">2 minutes ago</div>
+          </div>
+        </div>
+        <div class="lg-doc-card lg-doc-card-3">
+          <div class="ic"><i class="bi bi-check-circle-fill"></i></div>
+          <div>
+            <div class="fw-semibold" style="font-size: var(--ac-fs-sm);">Audit Verified</div>
+            <div style="font-size: var(--ac-fs-xs); color: rgba(255,255,255,0.7);">All systems normal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RIGHT: LOGIN FORM (40%) ============ -->
+  <div class="lg-form-panel">
+    <div class="lg-login-card">
+
+      <div class="lg-login-header">
+        <div class="lg-login-icon">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <div class="lg-login-title">Welcome back</div>
+        <p class="lg-login-subtitle">Sign in to access your documents</p>
+      </div>
+
+      {% if error_message %}
+        <div class="lg-error-alert" role="alert">
+          <i class="bi bi-exclamation-triangle-fill fs-5 mt-1"></i>
+          <div>
+            <div class="fw-semibold mb-1">Invalid username or password.</div>
+            <div style="font-size: var(--ac-fs-sm); opacity: 0.9;">{{ error_message }}</div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show ac-rounded-lg" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="" novalidate>
+
+        <div class="mb-4">
+          <label for="username" class="form-label">Username</label>
+          <input
             type="text"
+            class="form-control"
+            id="username"
             name="username"
+            placeholder="Enter your username"
+            autocomplete="username"
             required
-        >
+            autofocus>
+        </div>
 
-        <br><br>
-
-        <label>Password</label>
-        <input
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <input
             type="password"
+            class="form-control"
+            id="password"
             name="password"
-            required
-        >
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required>
+        </div>
 
-        <br><br>
-
-        <button type="submit">
-            Login
+        <button type="submit" class="btn btn-gradient btn-lg lg-submit-btn">
+          <i class="bi bi-box-arrow-in-right"></i> Login
         </button>
 
-    </form>
+      </form>
 
+      <a href="/" class="lg-back-link">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -47,7 +47,10 @@ def login():
                 "/dashboard"
             )
 
-        return "Invalid Credentials"
+        return render_template(
+            "login.html",
+            error_message="Invalid username or password"
+        )
 
     return render_template(
         "login.html"

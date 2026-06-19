@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,render_template
 
 from config.settings import (
     FLASK_SECRET_KEY
@@ -50,7 +50,9 @@ app.register_blueprint(
 
 @app.route("/")
 def home():
-    return "Document Platform Running v3"
+    return render_template(
+        "landing.html"
+    )
 
 
 if __name__ == "__main__":

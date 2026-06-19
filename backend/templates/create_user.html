@@ -1,70 +1,87 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create User</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>Create User</h2>
+{% block title %}Create User{% endblock %}
+{% block page_header %}Create User{% endblock %}
 
-<form method="POST">
+{% block content %}
 
-    <label>Username</label>
-    <br>
-    <input
-        type="text"
-        name="username"
-        required
-    >
+<div class="ac-page-header">
+  <div>
+    <div class="ac-page-title">Create User</div>
+    <p class="ac-page-subtitle mb-0">Add a new user and assign their role on the platform.</p>
+  </div>
+</div>
 
-    <br><br>
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-7 col-xl-6">
 
-    <label>Password</label>
-    <br>
-    <input
-        type="password"
-        name="password"
-        required
-    >
+    <div class="ac-card">
+      <div class="ac-card-header">
+        <div>
+          <div class="ac-card-title">New User Details</div>
+          <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">All fields are required</p>
+        </div>
+        <div class="ac-stat-icon" style="width:40px; height:40px; margin-bottom:0;">
+          <i class="bi bi-person-plus-fill"></i>
+        </div>
+      </div>
 
-    <br><br>
+      <div class="ac-card-body">
+        <form method="POST" action="" novalidate>
 
-    <label>Role</label>
-    <br>
+          <div class="mb-4">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="e.g. j.rodriguez"
+              autocomplete="off"
+              required>
+            <div class="form-text">This will be used to sign in to the platform.</div>
+          </div>
 
-    <select name="role">
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter a temporary password"
+              autocomplete="new-password"
+              required>
+            <div class="form-text">The user can change this after their first login.</div>
+          </div>
 
-        <option value="admin">
-            Admin
-        </option>
+          <div class="mb-4">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" required>
+              <option value="" selected disabled>Select a role</option>
+              <option value="development">Development</option>
+              <option value="operations">Operations</option>
+              <option value="client">Client</option>
+            </select>
+            <div class="form-text">Determines what this user can access on the platform.</div>
+          </div>
 
-        <option value="development">
-            Development
-        </option>
+          <hr class="ac-divider">
 
-        <option value="operations">
-            Operations
-        </option>
+          <div class="d-flex justify-content-end gap-2">
+            <a href="/users" class="btn btn-outline-primary">
+              <i class="bi bi-x-lg"></i> Cancel
+            </a>
+            <button type="submit" class="btn btn-gradient">
+              <i class="bi bi-check-lg"></i> Create User
+            </button>
+          </div>
 
-        <option value="client">
-            Client
-        </option>
+        </form>
+      </div>
+    </div>
 
-    </select>
+  </div>
+</div>
 
-    <br><br>
-
-    <button type="submit">
-        Create User
-    </button>
-
-</form>
-
-<br>
-
-<a href="/users">
-    Back
-</a>
-
-</body>
-</html>
+{% endblock %}

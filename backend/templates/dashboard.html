@@ -1,4 +1,228 @@
-Dashboard |
-Upload |
-Users |
-Logout
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_header %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="ac-page-header">
+  <div>
+    <div class="ac-page-title">Welcome back, {{ username }}</div>
+    <p class="ac-page-subtitle mb-0">
+      Signed in as
+      {% if role == 'admin' %}
+        <span class="ac-badge ac-badge-shared">Admin</span>
+      {% else %}
+        <span class="ac-badge ac-badge-neutral">{{ role | capitalize }}</span>
+      {% endif %}
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/upload" class="btn btn-gradient">
+      <i class="bi bi-cloud-arrow-up-fill"></i> Upload File
+    </a>
+  </div>
+</div>
+
+<!-- ============ STATISTIC CARDS ============ -->
+<div class="row g-4 mb-5">
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="ac-stat-card ac-card-interactive h-100">
+      <div class="ac-stat-icon">
+        <i class="bi bi-people-fill fs-5"></i>
+      </div>
+      <div class="ac-stat-value">{{ total_users }}</div>
+      <div class="ac-stat-label">Total Users</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="ac-stat-card ac-card-interactive h-100">
+      <div class="ac-stat-icon" style="background: var(--ac-info-bg); color: var(--ac-accent);">
+        <i class="bi bi-file-earmark-text-fill fs-5"></i>
+      </div>
+      <div class="ac-stat-value">{{ total_documents }}</div>
+      <div class="ac-stat-label">Documents</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="ac-stat-card ac-card-interactive h-100">
+      <div class="ac-stat-icon" style="background: var(--ac-success-bg); color: var(--ac-success-text);">
+        <i class="bi bi-share-fill fs-5"></i>
+      </div>
+      <div class="ac-stat-value">{{ total_shared }}</div>
+      <div class="ac-stat-label">Shared Files</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="ac-stat-card ac-card-interactive h-100">
+      <div class="ac-stat-icon" style="background: var(--ac-warning-bg); color: var(--ac-warning-text);">
+        <i class="bi bi-shield-lock-fill fs-5"></i>
+      </div>
+      <div class="ac-stat-value">{{ total_audit_events }}</div>
+      <div class="ac-stat-label">Audit Events</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ RECENT DOCUMENTS TABLE ============ -->
+<div class="ac-card mb-4">
+  <div class="ac-card-header">
+    <div>
+      <div class="ac-card-title">Recent Documents</div>
+      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Latest files uploaded or modified across the platform</p>
+    </div>
+    <span class="ac-badge ac-badge-neutral">{{ recent_documents|length }} shown</span>
+  </div>
+
+  <div class="ac-card-body">
+    {% if recent_documents|length == 0 %}
+      <div class="ac-empty-state">
+        <div class="ac-empty-icon"><i class="bi bi-folder2-open fs-3"></i></div>
+        <h3 class="h6">No documents yet</h3>
+        <p class="ac-text-muted mb-0">Uploaded files will appear here.</p>
+      </div>
+    {% else %}
+      <div class="ac-table-wrap">
+        <table class="ac-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Owner</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for file in recent_documents %}
+            <tr>
+              <td class="ac-cell-primary">
+                <i class="bi bi-file-earmark-text-fill ac-text-muted me-2"></i>{{ file.display_name }}
+              </td>
+              <td class="ac-cell-muted">{{ file.owner }}</td>
+              <td>
+                {% if file.status == 'shared' %}
+                  <span class="ac-badge ac-badge-shared">Shared</span>
+                {% elif file.status == 'disabled' %}
+                  <span class="ac-badge ac-badge-disabled">Disabled</span>
+                {% else %}
+                  <span class="ac-badge ac-badge-active">Active</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="ac-table-actions">
+                  <a href="/file/{{ file.file_id }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-eye"></i> View
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ============ RECENT AUDIT ACTIVITY TIMELINE ============ -->
+<div class="ac-card">
+  <div class="ac-card-header">
+    <div>
+      <div class="ac-card-title">Recent Audit Activity</div>
+      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Live feed of the latest security and access events</p>
+    </div>
+    <a href="/audit-logs" class="btn btn-outline-primary btn-sm">
+      View All <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+
+  <div class="ac-card-body">
+    {% if audit_events|length == 0 %}
+      <div class="ac-empty-state">
+        <div class="ac-empty-icon"><i class="bi bi-clock-history fs-3"></i></div>
+        <h3 class="h6">No recent activity</h3>
+        <p class="ac-text-muted mb-0">Audit events will appear here as they happen.</p>
+      </div>
+    {% else %}
+      <div class="ac-timeline">
+        {% for event in audit_events %}
+        <div class="ac-timeline-item">
+          <div class="ac-timeline-marker
+            {% if event.type == 'shared' %}ac-marker-shared
+            {% elif event.type == 'disabled' %}ac-marker-disabled
+            {% else %}ac-marker-active{% endif %}">
+          </div>
+          <div class="ac-timeline-content">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="ac-fw-semibold">{{ event.action }}</span>
+                {% if event.type == 'shared' %}
+                  <span class="ac-badge ac-badge-shared">Shared</span>
+                {% elif event.type == 'disabled' %}
+                  <span class="ac-badge ac-badge-disabled">Disabled</span>
+                {% else %}
+                  <span class="ac-badge ac-badge-active">Active</span>
+                {% endif %}
+              </div>
+              <span class="ac-text-faint" style="font-size: var(--ac-fs-xs);">
+                <i class="bi bi-clock"></i> {{ event.timestamp }}
+              </span>
+            </div>
+            <p class="ac-text-muted mb-1 mt-1" style="font-size: var(--ac-fs-sm);">{{ event.details }}</p>
+            <span class="ac-text-faint" style="font-size: var(--ac-fs-xs);">
+              <i class="bi bi-person-circle"></i> {{ event.username }}
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ac-timeline {
+    position: relative;
+    padding-left: 8px;
+  }
+
+  .ac-timeline-item {
+    display: flex;
+    gap: var(--ac-space-4);
+    padding: var(--ac-space-4) 0;
+    border-bottom: 1px solid var(--ac-border-soft);
+    transition: var(--ac-transition);
+  }
+
+  .ac-timeline-item:hover {
+    background: rgba(91, 91, 214, 0.03);
+    border-radius: var(--ac-radius-sm);
+  }
+
+  .ac-timeline-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .ac-timeline-item:first-child { padding-top: 0; }
+
+  .ac-timeline-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 4px var(--ac-bg);
+  }
+
+  .ac-marker-active { background: var(--ac-success); }
+  .ac-marker-disabled { background: var(--ac-danger); }
+  .ac-marker-shared { background: var(--ac-accent); }
+
+  .ac-timeline-content { flex: 1; min-width: 0; }
+</style>
+{% endblock %}
