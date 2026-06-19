@@ -1,95 +1,94 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Users</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>User Management</h2>
+{% block title %}User Management{% endblock %}
+{% block page_header %}User Management{% endblock %}
 
-<a href="/users/create">
-    Create User
-</a>
+{% block content %}
 
-|
+<div class="ac-page-header">
+  <div>
+    <div class="ac-page-title">User Management</div>
+    <p class="ac-page-subtitle mb-0">Manage platform users, roles, and access status.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/users/create" class="btn btn-gradient">
+      <i class="bi bi-person-plus-fill"></i> Create User
+    </a>
+  </div>
+</div>
 
-<a href="/dashboard">
-    Dashboard
-</a>
+<div class="ac-card">
+  <div class="ac-card-header">
+    <div>
+      <div class="ac-card-title">All Users</div>
+      <p class="ac-text-muted mb-0" style="font-size: var(--ac-fs-sm);">Manage roles, access, and account status</p>
+    </div>
+    <span class="ac-badge ac-badge-neutral">{{ users|length }} total</span>
+  </div>
 
-|
-
-<a href="/logout">
-    Logout
-</a>
-
-<hr>
-
-<a href="/dashboard">
-    Dashboard
-</a>
-
-<hr>
-
-<table border="1">
-
-<tr>
-    <th>Username</th>
-    <th>Role</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
-
-{% for user in users %}
-
-<tr>
-
-<td>{{ user.username }}</td>
-
-<td>{{ user.role }}</td>
-
-<td>
-    {% if user.get('active', True) %}
-        Active
+  <div class="ac-card-body">
+    {% if users|length == 0 %}
+      <div class="ac-empty-state">
+        <div class="ac-empty-icon"><i class="bi bi-people fs-3"></i></div>
+        <h3 class="h6">No users found</h3>
+        <p class="ac-text-muted mb-0">Create your first user to get started.</p>
+      </div>
     {% else %}
-        Disabled
+      <div class="ac-table-wrap">
+        <table class="ac-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td class="ac-cell-primary">
+                <i class="bi bi-person-circle ac-text-muted me-2"></i>{{ user.username }}
+              </td>
+              <td class="ac-cell-muted">
+                {{ user.role | capitalize }}
+              </td>
+              <td>
+                {% if user.active %}
+                  <span class="ac-badge ac-badge-active">Active</span>
+                {% else %}
+                  <span class="ac-badge ac-badge-disabled">Disabled</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="ac-table-actions">
+                  {% if user.username == "admin" %}
+                    <span class="ac-badge ac-badge-shared">
+                      <i class="bi bi-shield-lock-fill"></i> Protected
+                    </span>
+                  {% else %}
+                    <a href="/users/reset/{{ user.username }}" class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-key-fill"></i> Reset Password
+                    </a>
+                    {% if user.active %}
+                      <a href="/users/disable/{{ user.username }}" class="btn btn-danger btn-sm">
+                        <i class="bi bi-slash-circle"></i> Disable
+                      </a>
+                    {% else %}
+                      <a href="/users/enable/{{ user.username }}" class="btn btn-success btn-sm">
+                        <i class="bi bi-check-circle"></i> Enable
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% endif %}
-</td>
+  </div>
+</div>
 
-<td>
-    {% if user.username != "admin" %}
-
-        {% if user.get('active', True) %}
-
-            <a href="/users/reset/{{ user.username }}">
-                Reset Password
-            </a>
-
-            |
-
-            <a href="/users/disable/{{ user.username }}">
-	        Disable
-	    </a>
-        {% else %}
-            <a href="/users/reset/{{ user.username }}">
-                Reset Password
-            </a>
-
-            |
-
-            <a href="/users/enable/{{ user.username }}">
-                Enable
-            </a>
-
-        {% endif %}
-
-    {% endif %}
-</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-</body>
-</html>
+{% endblock %}
