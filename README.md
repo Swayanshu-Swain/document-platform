@@ -82,10 +82,14 @@ The platform provides secure document storage, retrieval, sharing, and metadata 
 
 
 ### DevOps & Automation
+
 - Dockerized application deployment
 - GitHub Actions CI/CD pipeline
 - Docker Hub image registry
 - Automated deployment via AWS SSM
+- Kubernetes container orchestration
+- Helm-based Kubernetes deployments
+- Environment-specific Helm configurations
 - Infrastructure as Code (IaC)
 
 ---
@@ -227,6 +231,32 @@ Deployment occurs automatically whenever changes are pushed to the main branch.
 
 ---
 
+## 5. Kubernetes & Helm Architecture
+
+This diagram illustrates the Kubernetes deployment architecture and Helm-based release management.
+
+![Kubernetes Architecture](docs/screenshots/kubernetes-helm-architecture.png)
+
+### Deployment Flow
+
+```text
+Developer
+    ↓
+Helm Values
+    ↓
+Helm Chart
+    ↓
+Kubernetes
+    ↓
+Deployment
+    ↓
+Pod
+    ↓
+Service
+```
+---
+
+
 # Technology Stack
 
 ## Backend
@@ -254,6 +284,11 @@ Deployment occurs automatically whenever changes are pushed to the main branch.
 
 - Git
 - GitHub
+
+## Platform Engineering
+
+- Kubernetes
+- Helm
 
 ---
 
@@ -288,6 +323,7 @@ GitHub Actions provides seamless CI/CD integration directly from the source repo
 # Project Structure
 
 ```text
+```text
 document-platform/
 │
 ├── backend/
@@ -297,7 +333,7 @@ document-platform/
 │   ├── routes/
 │   ├── services/
 │   ├── templates/
-|   ├── static/
+│   ├── static/
 │   ├── utils/
 │   ├── app.py
 │   └── Dockerfile
@@ -305,6 +341,20 @@ document-platform/
 ├── terraform/
 │   ├── bootstrap/
 │   └── infrastructure/
+│
+├── k8s/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── configmap.yaml
+│   └── secret.yaml
+│
+├── helm/
+│   └── document-platform/
+│       ├── templates/
+│       ├── values.yaml
+│       ├── values-dev.yaml
+│       ├── values-stage.yaml
+│       └── values-prod.yaml
 │
 ├── docs/
 │   └── screenshots/
@@ -471,10 +521,13 @@ No manual server access is required during deployment.
 
 ### Platform Engineering
 
-- Kubernetes (EKS)
-- Helm Charts
 - ArgoCD GitOps
 - Blue-Green Deployments
+- Canary Deployments
+- Kubernetes Horizontal Pod Autoscaler
+- External Secrets Operator
+- AWS EKS Migration
+- Multi-Environment Promotion Pipelines
 
 ---
 
