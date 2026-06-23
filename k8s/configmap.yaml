@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: document-platform-config
+
+data:
+  AWS_REGION: "ap-south-1"
+
+  AWS_S3_BUCKET: "document-platform-dev-006870473063"
+
+  DYNAMODB_USERS_TABLE: "users-dev"
+
+  DYNAMODB_FILES_TABLE: "files-dev"
+
+  DYNAMODB_AUDIT_TABLE: "audit_logs-dev"

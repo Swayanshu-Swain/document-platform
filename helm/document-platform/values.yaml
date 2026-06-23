@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: swayanshuswain/document-platform-backend
+  tag: latest
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 5000
+
+aws:
+  region: ap-south-1
+  bucket: document-platform-dev-006870473063
+
+dynamodb:
+  usersTable: users-dev
+  filesTable: files-dev
+  auditTable: audit_logs-dev
+
+flask:
+  secretKey: "a4bf5844ec5a3896f20e3198288410c41182df7024156c306a950f91a35d55e4"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
