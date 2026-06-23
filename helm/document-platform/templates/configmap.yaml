@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: document-platform-config
+
+data:
+  AWS_REGION: "{{ .Values.aws.region }}"
+  AWS_S3_BUCKET: "{{ .Values.aws.bucket }}"
+
+  DYNAMODB_USERS_TABLE: "{{ .Values.dynamodb.usersTable }}"
+  DYNAMODB_FILES_TABLE: "{{ .Values.dynamodb.filesTable }}"
+  DYNAMODB_AUDIT_TABLE: "{{ .Values.dynamodb.auditTable }}"
