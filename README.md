@@ -1,26 +1,160 @@
 # Document Platform
 
-A cloud-native enterprise document management platform built with AWS, Terraform, Docker, and GitHub Actions. The platform provides secure document storage, sharing, auditability, user administration, role-based access control, and automated cloud deployment through a complete DevOps pipeline
+A cloud-native enterprise document management platform built using AWS, Terraform, Docker, Kubernetes, Helm, GitHub Actions, and ArgoCD.
 
-This project demonstrates the complete software delivery lifecycle, from infrastructure provisioning and containerized deployment to automated CI/CD and cloud-native document storage.
-
-The platform provides secure document storage, retrieval, sharing, and metadata management while showcasing modern DevOps and Infrastructure-as-Code practices.
+The platform enables secure document storage, retrieval, sharing, audit logging, and role-based access control while demonstrating modern DevOps, Platform Engineering, Infrastructure-as-Code, and GitOps practices.
 
 ---
 
-## Project Highlights
+<p align="center">
+  <img src="docs/screenshots/banner.png" alt="Document Platform Banner" width="100%">
+</p>
 
-### Cloud Infrastructure
-- Infrastructure provisioning using Terraform
-- Amazon EC2 compute layer
-- Amazon DynamoDB for metadata and authentication
-- Amazon S3 for document storage
-- IAM-based access management
-- AWS Systems Manager (SSM) for remote administration
+<p align="center">
+  <strong>Cloud-Native Enterprise Document Management Platform</strong><br>
+  Built with AWS, Terraform, Docker, Kubernetes, Helm, GitHub Actions, and ArgoCD
+</p>
 
-## Application Features
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-Flask-blue" />
+  <img src="https://img.shields.io/badge/AWS-S3%20%7C%20EC2%20%7C%20DynamoDB-orange" />
+  <img src="https://img.shields.io/badge/Docker-Containerized-blue" />
+  <img src="https://img.shields.io/badge/Kubernetes-Orchestrated-326CE5" />
+  <img src="https://img.shields.io/badge/Helm-Packaged-0F1689" />
+  <img src="https://img.shields.io/badge/ArgoCD-GitOps-EF7B4D" />
+  <img src="https://img.shields.io/badge/Terraform-IaC-623CE4" />
+</p>
 
-### Authentication & Authorization
+---
+
+## Table of Contents
+
+- [What This Project Demonstrates](#what-this-project-demonstrates)
+- [Technology Stack](#technology-stack)
+- [Project Highlights](#project-highlights)
+- [Architecture](#architecture)
+  - [Overview](#overview)
+  - [Runtime Infrastructure](#1-runtime-infrastructure)
+  - [AWS Infrastructure](#2-aws-infrastructure)
+  - [Application Architecture](#3-application-architecture)
+  - [CI/CD Deployment Pipeline](#4-cicd-deployment-pipeline)
+  - [Kubernetes & GitOps Architecture](#5-kubernetes--gitops-architecture)
+- [Design Decisions](#design-decisions)
+- [Project Structure](#project-structure)
+- [Screenshots](#screenshots)
+- [Infrastructure Components](#infrastructure-components)
+- [Deployment](#deployment)
+- [Release History](#release-history)
+- [Lessons Learned](#lessons-learned)
+- [Future Enhancements](#future-enhancements)
+- [Author](#author)
+- [License](#license)
+
+---
+
+## What This Project Demonstrates
+
+* AWS Infrastructure Provisioning with Terraform
+* Docker Containerization
+* CI/CD Automation with GitHub Actions
+* Kubernetes Deployments
+* Helm Chart Packaging
+* GitOps Continuous Delivery using ArgoCD
+* Secure Cloud Storage with S3 and DynamoDB
+* Role-Based Access Control (RBAC)
+* Audit Logging and Compliance Tracking
+
+---
+
+# Technology Stack
+
+## Backend
+
+* Python
+* Flask
+* Gunicorn
+
+## Cloud Services
+
+* Amazon EC2
+* Amazon S3
+* Amazon DynamoDB
+* AWS IAM
+* AWS Systems Manager (SSM)
+
+## DevOps & Platform Engineering
+
+* Docker
+* Docker Hub
+* GitHub Actions
+* Terraform
+* Kubernetes
+* Helm
+* ArgoCD
+
+## Version Control
+
+* Git
+* GitHub
+
+---
+
+# Skills Demonstrated
+
+## Cloud Engineering
+
+* AWS Infrastructure Provisioning
+* IAM Security Management
+* DynamoDB Data Modeling
+* S3 Object Storage Design
+* Systems Manager Administration
+
+## Infrastructure as Code
+
+* Terraform Modules
+* State Management
+* Automated Resource Provisioning
+* Environment Configuration
+
+## DevOps Engineering
+
+* Docker Containerization
+* GitHub Actions CI/CD
+* Image Registry Management
+* Automated Deployments
+
+## Platform Engineering
+
+* Kubernetes Deployments
+* Health Probes
+* Resource Management
+* Helm Packaging
+* GitOps Workflows
+* ArgoCD Continuous Delivery
+* Self-Healing Infrastructure
+
+## Backend Engineering
+
+* Flask Application Development
+* RBAC Authorization
+* Session Management
+* Audit Logging
+* Service Layer Architecture
+
+---
+
+# Project Highlights
+
+## Cloud Infrastructure
+
+* Infrastructure provisioning using Terraform
+* Amazon EC2 compute layer
+* Amazon DynamoDB for metadata and authentication
+* Amazon S3 for document storage
+* IAM-based access management
+* AWS Systems Manager (SSM) for remote administration
+
+## Authentication & Authorization
 
 * Secure user authentication
 * Role-based access control (RBAC)
@@ -28,7 +162,7 @@ The platform provides secure document storage, retrieval, sharing, and metadata 
 * Session-based access management
 * Admin-only management operations
 
-### Document Management
+## Document Management
 
 * Document upload
 * Secure document download
@@ -38,95 +172,55 @@ The platform provides secure document storage, retrieval, sharing, and metadata 
 * File restoration
 * Department-scoped document visibility
 
-### Collaboration Features
+## Collaboration Features
 
 * Document sharing across departments
 * Shared document access management
-* Remove shared access
 * Shared document dashboard
+* Access revocation support
 
-### User Administration
+## User Administration
 
 * Create users
 * Enable users
 * Disable users
 * Reset user passwords
-* View all registered users
+* View registered users
 
-### Audit & Compliance
+## Audit & Compliance
 
 * Centralized audit logging
-* Upload activity tracking
-* Share activity tracking
+* Upload tracking
+* Sharing tracking
 * Delete and restore tracking
-* User administration activity tracking
+* User administration tracking
 * Audit dashboard with timeline view
-
-### Dashboard Experience
-
-#### Administrator Dashboard
-
-* Platform-wide statistics
-* User metrics
-* Document metrics
-* Shared file metrics
-* Audit activity metrics
-* Recent audit timeline
-
-#### User Dashboard
-
-* Personal file statistics
-* Shared document visibility
-* Deleted file visibility
-* Recent document management
-
-
-### DevOps & Automation
-- Dockerized application deployment
-- GitHub Actions CI/CD pipeline
-- Docker Hub image registry
-- Automated deployment via AWS SSM
-- Infrastructure as Code (IaC)
 
 ---
 
-# Skills Demonstrated
+# Architecture Overview
 
-### Cloud Engineering
-- AWS Infrastructure Provisioning
-- IAM & Security Management
-- DynamoDB Design
-- S3 Object Storage
+The project evolved through multiple deployment models:
 
-### DevOps
-- Docker Containerization
-- CI/CD Pipeline Design
-- Infrastructure as Code (Terraform)
-
-### Platform Engineering
-- Kubernetes Deployments
-- Helm Packaging
-- GitOps with ArgoCD
-- Configuration Management
-- Self-Healing Deployments
-
-### Backend Development
-- Flask Web Applications
-- RBAC Authorization
-- Audit Logging
-- REST Architecture
+```text
+Local Development
+        ↓
+Dockerized Application
+        ↓
+AWS Cloud Deployment
+        ↓
+Kubernetes Orchestration
+        ↓
+Helm Packaging
+        ↓
+GitOps Continuous Delivery (ArgoCD)
+```
 
 ---
 
 # Architecture
 
-The project architecture is documented using four different perspectives.
-
----
-
 ## 1. Runtime Infrastructure
-
-This diagram shows how requests flow through the deployed runtime environment.
 
 ![Runtime Infrastructure](docs/screenshots/runtime-infrastructure.png)
 
@@ -148,43 +242,35 @@ Flask Application
 DynamoDB / S3
 ```
 
-Responsibilities:
-
-| Component | Purpose |
-|------------|----------|
-| Browser | User interface |
-| EC2 | Compute infrastructure |
-| Docker Engine | Container runtime |
-| Docker Container | Application environment |
-| Gunicorn | WSGI application server |
-| Flask | Backend application |
-| DynamoDB | Metadata and authentication storage |
-| S3 | Document storage |
+| Component        | Purpose                     |
+| ---------------- | --------------------------- |
+| Browser          | User interface              |
+| EC2              | Compute infrastructure      |
+| Docker Engine    | Container runtime           |
+| Docker Container | Application environment     |
+| Gunicorn         | WSGI server                 |
+| Flask            | Backend application         |
+| DynamoDB         | Metadata and authentication |
+| S3               | Document storage            |
 
 ---
 
 ## 2. AWS Infrastructure
 
-This diagram illustrates the AWS resources provisioned and managed through Terraform.
-
 ![AWS Infrastructure](docs/screenshots/aws-infrastructure.png)
 
 Provisioned Resources:
 
-- Amazon EC2
-- Amazon DynamoDB
-- Amazon S3
-- IAM Roles
-- Security Groups
-- AWS Systems Manager
-
-Infrastructure provisioning is fully automated through Terraform.
+* EC2
+* DynamoDB
+* S3
+* IAM
+* Security Groups
+* Systems Manager
 
 ---
 
 ## 3. Application Architecture
-
-This diagram represents the internal structure of the Flask application.
 
 ![Application Architecture](docs/screenshots/application-infrastructure.png)
 
@@ -204,32 +290,28 @@ AWS Resources
 
 ### Route Layer
 
-- auth_routes.py
-- dashboard_routes.py
-- file_routes.py
+* auth_routes.py
+* dashboard_routes.py
+* file_routes.py
 
 ### Service Layer
 
-- auth_service.py
-- file_service.py
-- audit_service.py
-- dynamodb_service.py
-- s3_service.py
+* auth_service.py
+* file_service.py
+* audit_service.py
+* dynamodb_service.py
+* s3_service.py
 
 ### Model Layer
 
-- user.py
-- file.py
+* user.py
+* file.py
 
 ---
 
-## 4. CI/CD Deployment Pipeline
-
-This diagram demonstrates the automated deployment workflow.
+## 4. CI/CD Pipeline
 
 ![CI/CD Pipeline](docs/screenshots/CICD-pipeline.png)
-
-### Deployment Flow
 
 ```text
 Developer
@@ -246,20 +328,14 @@ Docker Hub
     ↓
 AWS Systems Manager
     ↓
-Amazon EC2
-    ↓
-Docker Container Restart
+EC2 Deployment
 ```
-
-Deployment occurs automatically whenever changes are pushed to the main branch.
 
 ---
 
-## 5. Kubernetes & GitOps Architecture
+## 5. Kubernetes, Helm & GitOps Architecture
 
-The platform has been extended to support Kubernetes-native deployments using Helm and ArgoCD.
-
-![CI/CD Pipeline](docs/screenshots/Kubernetes_GitOps_Architecture.png)
+![GitOps Architecture](docs/screenshots/Kubernetes_GitOps_Architecture.png)
 
 ### Kubernetes Components
 
@@ -269,11 +345,10 @@ The platform has been extended to support Kubernetes-native deployments using He
 * Secret
 * Liveness Probes
 * Readiness Probes
-* Resource Requests & Limits
+* Resource Requests
+* Resource Limits
 
 ### Helm Packaging
-
-Application manifests are packaged as a reusable Helm chart.
 
 ```text
 helm/
@@ -283,18 +358,7 @@ helm/
     └── templates/
 ```
 
-Helm provides:
-
-* Environment-specific configuration
-* Reusable deployments
-* Versioned releases
-* Simplified upgrades
-
-### GitOps with ArgoCD
-
-ArgoCD continuously monitors the Git repository and automatically synchronizes Kubernetes resources.
-
-Deployment workflow:
+### GitOps Workflow
 
 ```text
 Developer
@@ -314,73 +378,29 @@ Document Platform
 
 Features:
 
-* Automated synchronization
-* Self-healing deployments
-* Drift detection
-* Declarative infrastructure management
-
-This architecture eliminates manual deployment commands and establishes Git as the single source of truth.
+* Automated Synchronization
+* Self-Healing Deployments
+* Drift Detection
+* Declarative Infrastructure
 
 ---
 
-# Technology Stack
+# GitOps Demonstration
 
-## Backend
+A deployment validation was performed by updating the Helm chart replica count from **1 → 2**.
 
-- Python
-- Flask
-- Gunicorn
+Workflow:
 
-## Cloud Services
+1. Modify `values.yaml`
+2. Commit changes
+3. Push to GitHub
+4. ArgoCD detects repository change
+5. Kubernetes synchronizes automatically
+6. New replica becomes available
 
-- Amazon EC2
-- Amazon S3
-- Amazon DynamoDB
-- AWS IAM
-- AWS Systems Manager
+Result:
 
-## DevOps & Platform Engineering
-
-- Docker
-- Docker Hub
-- GitHub Actions
-- Terraform
-- Kubernetes
-- Helm
-- ArgoCD
-
-## Version Control
-
-- Git
-- GitHub
-
----
-
-# Design Decisions
-
-## Why Terraform?
-
-Terraform enables reproducible infrastructure provisioning and eliminates manual resource configuration.
-
-## Why Docker?
-
-Docker ensures environment consistency between development and deployment environments.
-
-## Why DynamoDB?
-
-DynamoDB provides a managed, scalable NoSQL datastore ideal for metadata and user management.
-
-## Why Amazon S3?
-
-S3 offers highly durable and cost-effective object storage for documents.
-
-## Why AWS Systems Manager Instead of SSH?
-
-SSM allows secure remote administration without exposing SSH ports to the public internet.
-
-## Why GitHub Actions?
-
-GitHub Actions provides seamless CI/CD integration directly from the source repository.
+No manual deployment commands were executed.
 
 ---
 
@@ -390,34 +410,13 @@ GitHub Actions provides seamless CI/CD integration directly from the source repo
 document-platform/
 │
 ├── backend/
-│   ├── auth/
-│   ├── config/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── templates/
-|   ├── static/
-│   ├── utils/
-│   ├── app.py
-│   └── Dockerfile
-│
 ├── terraform/
-│   ├── bootstrap/
-│   └── infrastructure/
-|
 ├── k8s/
-|
 ├── helm/
 │   └── document-platform/
-|
 ├── gitops/
-│
 ├── docs/
-│   └── screenshots/
-│
 ├── .github/
-│   └── workflows/
-│
 ├── README.md
 └── .gitignore
 ```
@@ -513,111 +512,74 @@ document-platform/
 
 ---
 
-# Infrastructure Components
 
-| Service | Responsibility |
-|----------|---------------|
-| EC2 | Hosts application runtime |
-| Docker | Container execution |
-| Gunicorn | Application server |
-| Flask | Business logic |
-| DynamoDB | Metadata storage |
-| S3 | Document storage |
-| IAM | Access management |
-| SSM | Remote administration |
-| GitHub Actions | CI/CD |
-| Docker Hub | Image registry |
-| Terraform | Infrastructure provisioning |
+# Project Metrics
+
+| Metric                | Value                                  |
+| --------------------- | -------------------------------------- |
+| AWS Services          | 5+                                     |
+| Architecture Diagrams | 5                                      |
+| Deployment Models     | 4                                      |
+| Kubernetes Resources  | Deployment, Service, ConfigMap, Secret |
+| GitOps Tool           | ArgoCD                                 |
+| Package Manager       | Helm                                   |
+| Backend Framework     | Flask                                  |
 
 ---
 
-# Deployment
-
-Infrastructure provisioning:
-
-```bash
-terraform init
-terraform plan
-terraform apply
-```
-
-Application deployment:
-
-```text
-Git Push
-    ↓
-GitHub Actions
-    ↓
-Docker Build
-    ↓
-Docker Hub
-    ↓
-AWS SSM
-    ↓
-EC2 Deployment
-```
-
-No manual server access is required during deployment.
-
----
 # Release History
 
-| Version | Features |
-|----------|-----------|
-| v1.0.0 | AWS-based Document Platform |
-| v1.0.1 | Repository cleanup and stabilization |
-| v1.1.0 | Kubernetes deployment |
-| v1.2.0 | Helm chart packaging |
-| v1.2.1 | Helm improvements and parameterization |
-| v1.3.0 | ArgoCD GitOps deployment |
+| Version | Features              |
+| ------- | --------------------- |
+| v1.0.0  | AWS Document Platform |
+| v1.0.1  | Stabilization         |
+| v1.1.0  | Kubernetes Deployment |
+| v1.2.0  | Helm Packaging        |
+| v1.2.1  | Helm Parameterization |
+| v1.3.0  | ArgoCD GitOps         |
 
 ---
 
 # Lessons Learned
 
-During this project I gained hands-on experience with:
-
-- Infrastructure provisioning using Terraform
-- Secure AWS resource management
-- Docker image creation and deployment
-- CI/CD automation using GitHub Actions
-- Kubernetes application deployment
-- Helm chart development
-- GitOps workflows using ArgoCD
-- Repository optimization and Git history management
-- Production-style configuration management
+* Terraform Infrastructure Provisioning
+* AWS Resource Security
+* Docker Image Lifecycle
+* GitHub Actions CI/CD
+* Kubernetes Deployments
+* Helm Chart Development
+* GitOps with ArgoCD
+* Repository Optimization
+* Production Configuration Management
 
 ---
 
 # Future Enhancements
 
-### Infrastructure
+## Infrastructure
 
-- Custom Domain
-- HTTPS (TLS/SSL)
-- Nginx Reverse Proxy
-- CloudWatch Monitoring
-- CloudWatch Alarms
-- Application Load Balancer
-- Auto Scaling
+* HTTPS / TLS
+* Custom Domain
+* Application Load Balancer
+* CloudWatch Monitoring
+* Auto Scaling
+* EKS Migration
 
-### Platform Features
+## Platform Features
 
-* Advanced Search & Filtering
 * File Versioning
-* Department Management
-* Activity Notifications
-* Bulk Upload Support
-* Folder Hierarchy
-* Document Expiration Policies
-* Public Share Links
-* Multi-Factor Authentication (MFA)
-* User Profile Management
+* Advanced Search
+* MFA
+* Folder Hierarchies
+* Notifications
+* Bulk Upload
 
-### Platform Engineering
+## Platform Engineering
 
-- Kubernetes (EKS)
-- Blue-Green Deployments
+* Blue-Green Deployments
+* Canary Deployments
+* Service Mesh
+* Multi-Environment GitOps
 
 ---
 
@@ -625,11 +587,11 @@ During this project I gained hands-on experience with:
 
 **Swayanshu Swain**
 
-B.Tech Computer Science & Engineering  
+B.Tech Computer Science & Engineering
 Silicon University, Bhubaneswar
 
 ---
 
-## License
+# License
 
 This project is intended for educational, portfolio, and learning purposes.
