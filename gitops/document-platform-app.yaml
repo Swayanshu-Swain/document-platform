@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: document-platform
+
+  namespace: argocd
+
+spec:
+
+  project: default
+
+  source:
+    repoURL: https://github.com/Swayanshu-Swain/document-platform.git
+
+    targetRevision: feature/gitops-argocd
+
+    path: helm/document-platform
+
+  destination:
+
+    server: https://kubernetes.default.svc
+
+    namespace: default
+
+  syncPolicy:
+
+    automated:
+
+      prune: true
+
+      selfHeal: true
