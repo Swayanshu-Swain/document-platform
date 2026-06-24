@@ -90,6 +90,34 @@ The platform provides secure document storage, retrieval, sharing, and metadata 
 
 ---
 
+# Skills Demonstrated
+
+### Cloud Engineering
+- AWS Infrastructure Provisioning
+- IAM & Security Management
+- DynamoDB Design
+- S3 Object Storage
+
+### DevOps
+- Docker Containerization
+- CI/CD Pipeline Design
+- Infrastructure as Code (Terraform)
+
+### Platform Engineering
+- Kubernetes Deployments
+- Helm Packaging
+- GitOps with ArgoCD
+- Configuration Management
+- Self-Healing Deployments
+
+### Backend Development
+- Flask Web Applications
+- RBAC Authorization
+- Audit Logging
+- REST Architecture
+
+---
+
 # Architecture
 
 The project architecture is documented using four different perspectives.
@@ -227,6 +255,72 @@ Deployment occurs automatically whenever changes are pushed to the main branch.
 
 ---
 
+## 5. Kubernetes & GitOps Architecture
+
+The platform has been extended to support Kubernetes-native deployments using Helm and ArgoCD.
+
+### Kubernetes Components
+
+* Deployment
+* Service
+* ConfigMap
+* Secret
+* Liveness Probes
+* Readiness Probes
+* Resource Requests & Limits
+
+### Helm Packaging
+
+Application manifests are packaged as a reusable Helm chart.
+
+```text
+helm/
+└── document-platform
+    ├── Chart.yaml
+    ├── values.yaml
+    └── templates/
+```
+
+Helm provides:
+
+* Environment-specific configuration
+* Reusable deployments
+* Versioned releases
+* Simplified upgrades
+
+### GitOps with ArgoCD
+
+ArgoCD continuously monitors the Git repository and automatically synchronizes Kubernetes resources.
+
+Deployment workflow:
+
+```text
+Developer
+    ↓
+Git Push
+    ↓
+GitHub Repository
+    ↓
+ArgoCD
+    ↓
+Helm Chart
+    ↓
+Kubernetes Cluster
+    ↓
+Document Platform
+```
+
+Features:
+
+* Automated synchronization
+* Self-healing deployments
+* Drift detection
+* Declarative infrastructure management
+
+This architecture eliminates manual deployment commands and establishes Git as the single source of truth.
+
+---
+
 # Technology Stack
 
 ## Backend
@@ -243,12 +337,15 @@ Deployment occurs automatically whenever changes are pushed to the main branch.
 - AWS IAM
 - AWS Systems Manager
 
-## DevOps
+## DevOps & Platform Engineering
 
 - Docker
 - Docker Hub
 - GitHub Actions
 - Terraform
+- Kubernetes
+- Helm
+- ArgoCD
 
 ## Version Control
 
@@ -305,6 +402,13 @@ document-platform/
 ├── terraform/
 │   ├── bootstrap/
 │   └── infrastructure/
+|
+├── k8s/
+|
+├── helm/
+│   └── document-platform/
+|
+├── gitops/
 │
 ├── docs/
 │   └── screenshots/
@@ -395,6 +499,17 @@ document-platform/
 ![Amazon EC2](docs/screenshots/ec2-instance.png)
 
 ---
+## ArgoCD GitOps Dashboard
+
+![ArgoCD](docs/screenshots/argocd-dashboard.png)
+
+---
+
+## Kubernetes Deployment
+
+![Kubernetes](docs/screenshots/kubernetes-deployment.png)
+
+---
 
 # Infrastructure Components
 
@@ -443,6 +558,34 @@ EC2 Deployment
 No manual server access is required during deployment.
 
 ---
+# Release History
+
+| Version | Features |
+|----------|-----------|
+| v1.0.0 | AWS-based Document Platform |
+| v1.0.1 | Repository cleanup and stabilization |
+| v1.1.0 | Kubernetes deployment |
+| v1.2.0 | Helm chart packaging |
+| v1.2.1 | Helm improvements and parameterization |
+| v1.3.0 | ArgoCD GitOps deployment |
+
+---
+
+# Lessons Learned
+
+During this project I gained hands-on experience with:
+
+- Infrastructure provisioning using Terraform
+- Secure AWS resource management
+- Docker image creation and deployment
+- CI/CD automation using GitHub Actions
+- Kubernetes application deployment
+- Helm chart development
+- GitOps workflows using ArgoCD
+- Repository optimization and Git history management
+- Production-style configuration management
+
+---
 
 # Future Enhancements
 
@@ -472,8 +615,6 @@ No manual server access is required during deployment.
 ### Platform Engineering
 
 - Kubernetes (EKS)
-- Helm Charts
-- ArgoCD GitOps
 - Blue-Green Deployments
 
 ---
