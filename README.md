@@ -259,6 +259,8 @@ Deployment occurs automatically whenever changes are pushed to the main branch.
 
 The platform has been extended to support Kubernetes-native deployments using Helm and ArgoCD.
 
+![CI/CD Pipeline](docs/screenshots/Kubernetes_GitOps_Architecture.png)
+
 ### Kubernetes Components
 
 * Deployment
