@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/Swayanshu-Swain/document-platform.git
 
-    targetRevision: feature/gitops-argocd
+    targetRevision: main
 
     path: helm/document-platform
 
