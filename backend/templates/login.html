@@ -23,6 +23,15 @@
     min-height: 100vh;
     display: flex;
   }
+  .lg-brand-image {
+
+    width: 28px;
+
+    height: 28px;
+
+    object-fit: contain;
+
+   }
 
   /* ============ LEFT PANEL (60%) ============ */
   .lg-brand-panel {
@@ -301,6 +310,22 @@
 </head>
 <body>
 
+<div id="page-loader">
+
+    <div class="loader-container">
+
+        <div class="loader-sweep"></div>
+
+        <img
+            src="{{ url_for('static', filename='images/logo.svg') }}"
+            class="loader-logo"
+            alt="Document Platform"
+        >
+
+    </div>
+
+</div>
+
 <div class="lg-screen">
 
   <!-- ============ LEFT: BRAND PANEL (60%) ============ -->
@@ -311,7 +336,14 @@
 
     <div class="lg-brand-content">
       <div class="lg-brand-logo">
-        <div class="lg-logo-mark"><i class="bi bi-cloud-fill"></i></div>
+        <div class="lg-logo-mark">
+
+          <img
+              src="{{ url_for('static', filename='images/logo.svg') }}"
+              alt="Logo"
+              class="lg-brand-image"
+          >
+        </div>
         <span style="font-weight: var(--ac-fw-bold); font-size: var(--ac-fs-lg);">Document Platform</span>
       </div>
 
@@ -440,5 +472,29 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+window.addEventListener(
+    "load",
+    function () {
+
+        setTimeout(() => {
+
+            document
+                .getElementById(
+                    "page-loader"
+                )
+                ?.classList
+                .add(
+                    "hidden"
+                );
+
+        }, 1800);
+
+    }
+);
+
+</script>
 </body>
 </html>
