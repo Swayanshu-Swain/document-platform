@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+          - 'helm/document-platform/values.yaml'
 
 jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: swayanshuswain/document-platform-backend
 
     steps:
       - name: Checkout Code
@@ -19,45 +24,38 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Image
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+
+      - name: Build image
         run: |
           docker build \
-            -t swayanshuswain/document-platform-backend:latest \
-            ./backend
+            -t $IMAGE_NAME:$IMAGE_TAG \
+            backend
 
-      - name: Push Image
+
+      - name: Push image
         run: |
-          docker push \
-            swayanshuswain/document-platform-backend:latest
+          docker push $IMAGE_NAME:$IMAGE_TAG
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Find EC2 Instance
+      - name: Update Helm image tag
         run: |
-          INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters \
-            "Name=tag:Name,Values=document-platform-dev" \
-            "Name=instance-state-name,Values=running" \
-            --query "Reservations[0].Instances[0].InstanceId" \
-            --output text)
+          sed -i \
+            "s/tag: .*/tag: ${IMAGE_TAG}/" \
+            helm/document-platform/values.yaml
 
-          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
-
-      - name: Deploy via SSM
+      - name: Commit Helm changes
         run: |
-          aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name AWS-RunShellScript \
-            --parameters '{
-              "commands":[
-                "sudo docker pull swayanshuswain/document-platform-backend:latest",
-                "sudo docker stop document-platform || true",
-                "sudo docker rm document-platform || true",
-                "sudo docker run -d --name document-platform -p 80:5000 -e AWS_REGION=ap-south-1 -e DYNAMODB_USERS_TABLE=users-dev  -e DYNAMODB_FILES_TABLE=files-dev -e DYNAMODB_AUDIT_TABLE=audit_logs-dev -e AWS_S3_BUCKET=document-platform-dev-006870473063 -e FLASK_SECRET_KEY=${{ secrets.FLASK_SECRET_KEY }} swayanshuswain/document-platform-backend:latest"
-              ]
-            }'
+
+          git config user.name "github-actions"
+
+          git config user.email "actions@github.com"
+
+          git add helm/document-platform/values.yaml
+
+          git diff --cached --quiet || \
+            git commit -m "Deploy ${IMAGE_TAG}"
+
+          git push
+
