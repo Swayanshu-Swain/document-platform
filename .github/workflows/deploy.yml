@@ -1,5 +1,8 @@
 name: Deploy Backend
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -44,6 +47,11 @@ jobs:
           sed -i \
             "s/tag: .*/tag: ${IMAGE_TAG}/" \
             helm/document-platform/values.yaml
+
+      - name: Configure Git Authentication
+        run: |
+          git remote set-url origin \
+            https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Commit Helm changes
         run: |
