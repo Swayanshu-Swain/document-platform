@@ -26,10 +26,80 @@ The platform enables secure document storage, retrieval, sharing, audit logging,
 </p>
 
 ---
+# Quick Start
+
+## Demo Mode (Recommended for Recruiters)
+
+Run the complete platform locally:
+
+```bash
+git clone https://github.com/Swayanshu-Swain/document-platform.git
+
+cd document-platform
+
+./setup.sh
+```
+
+Access:
+
+```text
+Application:
+minikube service document-platform-service --url
+
+ArgoCD:
+https://localhost:8080
+```
+
+---
+
+## Developer Mode
+
+Provision AWS infrastructure:
+
+```bash
+./infra-up.sh
+```
+
+Configure CI/CD:
+
+```bash
+./configure-github-secrets.sh
+```
+
+Push changes:
+
+```bash
+git push origin main
+```
+
+GitHub Actions automatically:
+
+1. Builds the Docker image.
+2. Pushes to DockerHub.
+3. Updates deployment artifacts.
+4. ArgoCD synchronizes the Kubernetes cluster.
+
+---
+
+## Cleanup
+
+Destroy local resources:
+
+```bash
+./destroy.sh
+```
+
+Destroy AWS resources:
+
+```bash
+./infra-down.sh
+```
+---
 
 ## Table of Contents
 
 - [What This Project Demonstrates](#what-this-project-demonstrates)
+- [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
 - [Project Highlights](#project-highlights)
 - [Architecture](#architecture)
@@ -41,6 +111,8 @@ The platform enables secure document storage, retrieval, sharing, audit logging,
   - [Kubernetes & GitOps Architecture](#5-kubernetes--gitops-architecture)
 - [Design Decisions](#design-decisions)
 - [Project Structure](#project-structure)
+- [Repository Workflow](#repository-workflow)
+- [Local Development Notes](#local-development-notes)
 - [Screenshots](#screenshots)
 - [Infrastructure Components](#infrastructure-components)
 - [Deployment](#deployment)
@@ -420,6 +492,90 @@ document-platform/
 ├── README.md
 └── .gitignore
 ```
+---
+# Repository Workflow
+
+```text
+Developer
+    ↓
+Git Push
+    ↓
+GitHub Actions
+    ↓
+Docker Build
+    ↓
+DockerHub
+    ↓
+Helm Update
+    ↓
+ArgoCD
+    ↓
+Kubernetes Cluster
+    ↓
+Document Platform
+```
+
+The repository follows a GitOps workflow where Git serves as the single source of truth.
+
+No manual deployment commands are required after pushing changes.
+
+---
+
+# Local Development Notes
+
+## Accessing the Application
+
+Recommended:
+
+```bash
+minikube service document-platform-service --url
+```
+
+---
+
+## Accessing ArgoCD
+
+```text
+https://localhost:8080
+```
+
+Username:
+
+```text
+admin
+```
+
+The password is automatically displayed by `setup.sh`.
+
+---
+
+## About `document.local`
+
+An Ingress resource is provided to demonstrate production-style Kubernetes routing.
+
+```text
+document.local
+        ↓
+NGINX Ingress Controller
+        ↓
+Kubernetes Service
+        ↓
+Document Platform Pods
+```
+
+Depending on the operating system and Minikube driver, `document.local` may require:
+
+```bash
+minikube tunnel
+```
+
+For portability across Linux, macOS, Windows, and WSL environments, the project documentation recommends using:
+
+```bash
+minikube service document-platform-service --url
+```
+
+as the default access mechanism.
 
 ---
 
@@ -529,14 +685,14 @@ document-platform/
 
 # Release History
 
-| Version | Features              |
-| ------- | --------------------- |
-| v1.0.0  | AWS Document Platform |
-| v1.0.1  | Stabilization         |
-| v1.1.0  | Kubernetes Deployment |
-| v1.2.0  | Helm Packaging        |
-| v1.2.1  | Helm Parameterization |
-| v1.3.0  | ArgoCD GitOps         |
+| Version | Features                           |
+| ------- | ---------------------------------- |
+| v1.0.0  | AWS Deployment                     |
+| v1.1.0  | Docker Containerization            |
+| v1.2.0  | Kubernetes Migration               |
+| v1.2.1  | Helm Packaging                     |
+| v1.3.0  | GitOps with ArgoCD                 |
+| v1.4.0  | One-Click Setup Scripts            |
 
 ---
 
@@ -590,6 +746,17 @@ document-platform/
 B.Tech Computer Science & Engineering
 Silicon University, Bhubaneswar
 
+---
+# Contributing
+
+Contributors can reproduce the complete development workflow:
+
+```bash
+./infra-up.sh
+./configure-github-secrets.sh
+git push origin main
+./setup.sh
+```
 ---
 
 # License
