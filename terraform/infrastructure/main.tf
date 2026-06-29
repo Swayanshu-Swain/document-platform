@@ -232,7 +232,12 @@ resource "aws_instance" "document_platform" {
     aws_security_group.document_platform_sg.id
   ]
   
-  user_data = file("${path.module}/userdata.sh")
+  user_data = templatefile(
+    "${path.module}/userdata.sh.tpl",
+    {
+      flask_secret_key = var.flask_secret_key
+    }
+  ) 
 
   tags = {
     Name = "document-platform-dev"

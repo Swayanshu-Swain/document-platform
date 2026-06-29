@@ -7,3 +7,8 @@ variable "environment" {
   description = "Deployment environment"
   type        = string
 }
+
+variable "flask_secret_key" {
+  type      = string
+  sensitive = true
+}
