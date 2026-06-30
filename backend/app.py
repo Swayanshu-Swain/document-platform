@@ -1,5 +1,7 @@
 from flask import Flask,render_template
 
+import time
+
 from config.settings import (
     FLASK_SECRET_KEY
 )
@@ -27,12 +29,18 @@ app = Flask(__name__)
 
 app.secret_key = FLASK_SECRET_KEY
 
-try:
-    initialize_admin()
-except Exception as e:
-    print(
-        f"Admin initialization skipped: {e}"
-    )
+for attempt in range(3):
+    try:
+        initialize_admin()
+        break
+
+    except Exception as e:
+        print(
+            f"Admin initialization failed "
+            f"(attempt {attempt + 1}/3): {e}"
+        )
+
+        time.sleep(5)
 
 app.register_blueprint(auth_bp)
 

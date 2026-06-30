@@ -186,8 +186,12 @@ kubectl apply \
 echo
 echo "⏳ Waiting for ArgoCD to create deployment..."
 
-until kubectl get deployment document-platform \
->/dev/null 2>&1
+until kubectl get application document-platform -n argocd >/dev/null 2>&1
+do
+    sleep 2
+done
+
+until kubectl get deployment document-platform >/dev/null 2>&1
 do
     sleep 5
 done
