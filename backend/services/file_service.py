@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from services.dynamodb_service import dynamodb
+from services.dynamodb_service import get_files_table
 
 from boto3.dynamodb.conditions import Key
 
