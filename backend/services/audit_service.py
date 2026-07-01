@@ -1,38 +1,20 @@
-import boto3
-
 from datetime import datetime
 
-from config.settings import (
-    AWS_REGION
+from services.dynamodb_service import (
+    get_audit_table
 )
 
-dynamodb = boto3.resource(
-    "dynamodb",
-    region_name=AWS_REGION
-)
-
-from config.settings import (
-    DYNAMODB_AUDIT_TABLE
-)
-
-audit_table = dynamodb.Table(
-    DYNAMODB_AUDIT_TABLE
-)
 
 def log_event(
-
     username,
-
     action,
-
     file_id,
-
     file_name,
-
     department,
-
     details
 ):
+
+    audit_table = get_audit_table()
 
     timestamp = (
         datetime.utcnow()
@@ -65,14 +47,22 @@ def log_event(
                 details
         }
     )
+
+
 def get_total_audit_events():
+
+    audit_table = get_audit_table()
 
     response = audit_table.scan()
 
     return len(
         response["Items"]
     )
+
+
 def get_recent_audit_events():
+
+    audit_table = get_audit_table()
 
     response = audit_table.scan()
 

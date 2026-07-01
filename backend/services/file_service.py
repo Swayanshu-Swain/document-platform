@@ -4,12 +4,6 @@ from services.dynamodb_service import get_files_table
 
 from boto3.dynamodb.conditions import Key
 
-from config.settings import (
-    DYNAMODB_FILES_TABLE
-)
-
-files_table = get_files_table()
-
 def create_file_metadata(
     file_id,
     filename,
@@ -19,6 +13,7 @@ def create_file_metadata(
     file_size,
     content_type
 ):
+    files_table = get_files_table()
 
     item = {
 
@@ -52,6 +47,7 @@ def create_file_metadata(
 def get_owned_files(
     username
 ):
+    files_table = get_files_table()
 
     response = files_table.scan()
 
@@ -73,6 +69,7 @@ def get_owned_files(
 def get_shared_files(
     username
 ):
+    files_table = get_files_table()
 
     response = files_table.scan()
 
@@ -99,6 +96,7 @@ def get_shared_files(
 def get_files_by_department(
     department
 ):
+    files_table = get_files_table()
 
     response = files_table.query(
 
@@ -117,6 +115,7 @@ def get_files_by_department(
 def get_file_by_id(
     file_id
 ):
+    files_table = get_files_table()
 
     response = files_table.get_item(
         Key={
@@ -131,6 +130,7 @@ def share_file(
     file_id,
     username
 ):
+    files_table = get_files_table()
 
     file = get_file_by_id(
         file_id
@@ -163,6 +163,7 @@ def share_file(
 def get_files_shared_with_user(
     username
 ):
+    files_table = get_files_table()
 
     response = files_table.scan()
 
@@ -181,6 +182,7 @@ def soft_delete_file(
     file_id,
     deleted_by
 ):
+    files_table = get_files_table()
 
     files_table.update_item(
 
@@ -216,6 +218,7 @@ def remove_shared_access(
     file_id,
     username
 ):
+    files_table = get_files_table()
 
     file = get_file_by_id(
         file_id
@@ -248,6 +251,7 @@ def remove_shared_access(
 def get_deleted_files(
     username
 ):
+    files_table = get_files_table()
 
     response = files_table.scan()
 
@@ -276,6 +280,7 @@ def get_deleted_files(
 def restore_file(
     file_id
 ):
+    files_table = get_files_table()
 
     files_table.update_item(
 
@@ -295,6 +300,8 @@ def restore_file(
     )
 def get_total_documents():
 
+    files_table = get_files_table()
+
     response = files_table.scan()
 
     return len(
@@ -303,6 +310,7 @@ def get_total_documents():
 
 
 def get_total_shared():
+    files_table = get_files_table()
 
     response = files_table.scan()
 
