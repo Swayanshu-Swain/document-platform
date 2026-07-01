@@ -13,7 +13,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
@@ -236,6 +236,7 @@ resource "aws_instance" "document_platform" {
     "${path.module}/userdata.sh.tpl",
     {
       flask_secret_key = var.flask_secret_key
+      image_tag        = var.image_tag
     }
   ) 
 

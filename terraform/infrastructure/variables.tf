@@ -1,4 +1,4 @@
-8d6259bvariable "aws_region" {
+variable "aws_region" {
   description = "AWS region for resources"
   type        = string
 }
@@ -14,5 +14,7 @@ variable "flask_secret_key" {
 }
 
 variable "image_tag" {
-  default = "8d6259b"
+  description = "Docker image tag to deploy"
+  type        = string
+  default = "920703d"
 }

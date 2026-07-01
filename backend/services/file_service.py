@@ -8,9 +8,7 @@ from config.settings import (
     DYNAMODB_FILES_TABLE
 )
 
-files_table = dynamodb.Table(
-    DYNAMODB_FILES_TABLE
-)
+files_table = get_files_table()
 
 def create_file_metadata(
     file_id,
