@@ -3,7 +3,6 @@ replicaCount: 2
 image:
   repository: swayanshuswain/document-platform-backend
   tag: 8d3a30c
->>>>>>> 3b74eea (Change to a new image)
   pullPolicy: Always
 
 service:
