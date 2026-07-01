@@ -20,7 +20,8 @@ docker run -d \
   -p 80:5000 \
   -e AWS_REGION=ap-south-1 \
   -e DYNAMODB_USERS_TABLE=users-dev \
-  -e DYNAMODB_FILES_TABLE=audit_logs-dev \
+  -e DYNAMODB_FILES_TABLE=files-dev \
+  -e DYNAMODB_AUDIT_TABLE=audit_logs-dev \
   -e AWS_S3_BUCKET=document-platform-dev-006870473063 \
   -e FLASK_SECRET_KEY="${flask_secret_key}" \
   swayanshuswain/document-platform-backend:production
