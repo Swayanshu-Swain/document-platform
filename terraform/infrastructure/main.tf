@@ -236,7 +236,6 @@ resource "aws_instance" "document_platform" {
     "${path.module}/userdata.sh.tpl",
     {
       flask_secret_key = var.flask_secret_key
-      image_tag        = var.image_tag
     }
   ) 
 

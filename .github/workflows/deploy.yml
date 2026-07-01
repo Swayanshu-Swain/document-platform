@@ -35,12 +35,14 @@ jobs:
         run: |
           docker build \
             -t $IMAGE_NAME:$IMAGE_TAG \
+            -t $IMAGE_NAME:production \
             backend
 
 
       - name: Push image
         run: |
           docker push $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:production
 
       - name: Update Helm image tag
         run: |

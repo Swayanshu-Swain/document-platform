@@ -13,8 +13,3 @@ variable "flask_secret_key" {
   sensitive = true
 }
 
-variable "image_tag" {
-  description = "Docker image tag to deploy"
-  type        = string
-  default = "d4a65c5"
-}
