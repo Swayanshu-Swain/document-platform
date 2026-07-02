@@ -7,9 +7,8 @@ echo "=================================================="
 echo "🚀 Document Platform Local Environment Setup"
 echo "=================================================="
 echo
+echo "Prerequisite: Run ./infra-up.sh before ./setup.sh"
 echo
-echo "Prerequisite:"
-echo "Run ./infra-up.sh before ./setup.sh"
 
 ###################################################
 # Dependency Check
@@ -50,6 +49,7 @@ minikube start \
     --driver="$DRIVER" \
     --cpus=2 \
     --memory=2500
+
 echo
 echo "✅ Minikube running"
 echo
@@ -78,10 +78,11 @@ echo "Updating /etc/hosts..."
 
 sudo sed -i '/document.local/d' /etc/hosts
 
-echo "$MINIKUBE_IP document.local" \
+echo "$MINIKUBE_IP dev.document.local prod.document.local" \
 | sudo tee -a /etc/hosts >/dev/null
 
-echo "✅ document.local -> $MINIKUBE_IP"
+echo "✅ dev.document.local -> $MINIKUBE_IP"
+echo "✅ prod.document.local -> $MINIKUBE_IP"
 
 echo
 echo "✅ Ingress enabled"
@@ -117,93 +118,91 @@ echo "✅ ArgoCD ready"
 echo
 
 ###################################################
-# AWS Secret
+# Create Namespaces
 ###################################################
 
-echo "[4/7] Checking aws-credentials..."
+echo "[4/7] Creating namespaces..."
 
-if kubectl get secret aws-credentials >/dev/null 2>&1; then
+kubectl apply -f argocd/namespaces/
 
-    echo "✅ Existing secret reused."
+echo "✅ Namespaces ready"
+echo
 
-else
+###################################################
+# Create Secrets
+###################################################
 
-    echo "⚠️ Secret not found."
+echo "[5/7] Creating application secrets..."
 
-    [ -z "$AWS_ACCESS_KEY_ID" ] \
-        && read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+[ -z "$AWS_ACCESS_KEY_ID" ] \
+    && read -p "AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
 
-    [ -z "$AWS_SECRET_ACCESS_KEY" ] \
-        && read -s -p "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY \
-        && echo
+[ -z "$AWS_SECRET_ACCESS_KEY" ] \
+    && read -s -p "AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY \
+    && echo
+
+[ -z "$FLASK_SECRET_KEY" ] \
+    && read -s -p "FLASK_SECRET_KEY: " FLASK_SECRET_KEY \
+    && echo
+
+for ns in dev prod
+do
+    echo "🔐 Configuring secrets for namespace: $ns"
 
     kubectl create secret generic aws-credentials \
+        -n "$ns" \
         --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
-        --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
-
-    echo "✅ Secret created."
-
-fi
-
-echo
-
-###################################################
-# Flask Secret
-###################################################
-
-echo "[5/7] Checking document-platform-secret..."
-
-if kubectl get secret document-platform-secret >/dev/null 2>&1; then
-
-    echo "✅ Existing secret reused."
-
-else
-
-    echo "⚠️ Secret not found."
-
-    [ -z "$FLASK_SECRET_KEY" ] \
-        && read -s -p "FLASK_SECRET_KEY: " FLASK_SECRET_KEY \
-        && echo
+        --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+        --dry-run=client -o yaml \
+    | kubectl apply -f -
 
     kubectl create secret generic document-platform-secret \
-        --from-literal=FLASK_SECRET_KEY="$FLASK_SECRET_KEY"
+        -n "$ns" \
+        --from-literal=FLASK_SECRET_KEY="$FLASK_SECRET_KEY" \
+        --dry-run=client -o yaml \
+    | kubectl apply -f -
+done
 
-    echo "✅ Secret created."
-
-fi
-
+echo
+echo "✅ Secrets configured"
 echo
 
 ###################################################
-# Deploy Application
+# Deploy ApplicationSet
 ###################################################
 
-echo "[6/7] Deploying Document Platform..."
+echo "[6/7] Deploying ApplicationSet..."
 
-kubectl apply \
-    -f gitops/document-platform-app.yaml
+kubectl apply -f argocd/applicationset.yaml
 
 echo
-echo "⏳ Waiting for ArgoCD to create deployment..."
+echo "⏳ Waiting for ArgoCD applications..."
 
-until kubectl get application document-platform -n argocd >/dev/null 2>&1
+until kubectl get application document-platform-dev -n argocd >/dev/null 2>&1
 do
     sleep 2
 done
 
-until kubectl get deployment document-platform >/dev/null 2>&1
+until kubectl get application document-platform-prod -n argocd >/dev/null 2>&1
 do
-    sleep 5
+    sleep 2
 done
 
 echo
-echo "⏳ Deployment found. Waiting for rollout..."
+echo "⏳ Waiting for deployments..."
 
 kubectl rollout status \
     deployment/document-platform \
+    -n dev \
     --timeout=300s
+
+kubectl rollout status \
+    deployment/document-platform \
+    -n prod \
+    --timeout=300s
+
 echo
-echo "✅ Application deployed"
+echo "✅ Applications deployed"
 echo
 
 ###################################################
@@ -216,21 +215,20 @@ pkill -f "argocd-server.*8080:443" \
 >/dev/null 2>&1 || true
 
 nohup kubectl port-forward \
-svc/argocd-server \
--n argocd \
-8080:443 \
->/tmp/argocd.log 2>&1 &
+    svc/argocd-server \
+    -n argocd \
+    8080:443 \
+    >/tmp/argocd.log 2>&1 &
 
 sleep 5
 
 ARGO_PASSWORD=$(
 kubectl \
--n argocd \
-get secret argocd-initial-admin-secret \
--o jsonpath="{.data.password}" \
+    -n argocd \
+    get secret argocd-initial-admin-secret \
+    -o jsonpath="{.data.password}" \
 | base64 -d
 )
-
 
 echo
 echo "=================================================="
@@ -238,26 +236,20 @@ echo "🎉 DOCUMENT PLATFORM IS READY"
 echo "=================================================="
 echo
 
-echo "Application (Portable Access):"
-echo "The link to local deployment is given bellow"
+echo "Dev Environment:"
+echo "http://dev.document.local"
 echo
 
-echo "Ingress Endpoint:"
-echo "http://document.local"
-echo
-echo "Note:"
-echo "Native Linux/macOS: works immediately."
-echo "WSL2 + Docker driver users may need:"
-echo "  minikube tunnel"
+echo "Production Environment:"
+echo "http://prod.document.local"
 echo
 
 echo "ArgoCD:"
 echo "https://localhost:8080"
 echo
 
-echo "ArgoCD Username: admin"
-echo "ArgoCD Password: $ARGO_PASSWORD"
+echo "Username: admin"
+echo "Password: $ARGO_PASSWORD"
 echo
-echo "=================================================="
 
-minikube service document-platform-service --url
+echo "=================================================="
