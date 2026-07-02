@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: document-platform
+  namespace: argocd
+
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: dev
+
+          - env: prod
+            namespace: prod
+
+  template:
+
+    metadata:
+      name: document-platform-{{env}}
+
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/Swayanshu-Swain/document-platform.git
+        targetRevision: main
+        path: helm/document-platform
+
+        helm:
+          valueFiles:
+            - values-{{env}}.yaml
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
