@@ -7,3 +7,6 @@ dynamodb:
   usersTable: users-dev
   filesTable: files-dev
   auditTable: audit_logs-dev
+
+ingress:
+  host: dev.document.local

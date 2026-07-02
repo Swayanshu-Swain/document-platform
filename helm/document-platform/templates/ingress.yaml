@@ -8,7 +8,7 @@ spec:
   ingressClassName: nginx
 
   rules:
-    - host: document.local
+    - host: {{ .Values.ingress.host }}
 
       http:
         paths:

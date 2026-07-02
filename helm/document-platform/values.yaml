@@ -10,6 +10,9 @@ service:
   port: 80
   targetPort: 5000
 
+ingress:
+  host: document.local
+
 aws:
   region: ap-south-1
   bucket: document-platform-dev-006870473063
