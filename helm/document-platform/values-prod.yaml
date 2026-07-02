@@ -1,0 +1,9 @@
+replicaCount: 2
+
+aws:
+  bucket: document-platform-prod-006870473063
+
+dynamodb:
+  usersTable: users-prod
+  filesTable: files-prod
+  auditTable: audit_logs-prod

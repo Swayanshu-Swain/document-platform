@@ -1,0 +1,9 @@
+replicaCount: 1
+
+aws:
+  bucket: document-platform-dev-006870473063
+
+dynamodb:
+  usersTable: users-dev
+  filesTable: files-dev
+  auditTable: audit_logs-dev
